@@ -2,6 +2,7 @@
 using OBJS.API.Models.Advertises;
 using OBJS.API.Models.Products;
 using OBJS.API.Models.Customers;
+using OBJS.API.Models.Transactions;
 
 
 namespace OBJS.API.Models
@@ -11,7 +12,7 @@ namespace OBJS.API.Models
         //options: "ConnectionString:DefaultConnection"
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<Customer> Customers { get; set; }
@@ -27,8 +28,6 @@ namespace OBJS.API.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<SubCategory> SubCategories { get; set; }
 
-        
-        
-        
+        public DbSet<Bid> Bids { get; set; }
     }
 }

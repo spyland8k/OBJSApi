@@ -1,4 +1,6 @@
-﻿using OBJS.API.Models.Customers;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using OBJS.API.Models.Customers;
 using OBJS.API.Models.Advertises;
 
 namespace OBJS.API.Models.Transactions
@@ -15,10 +17,10 @@ namespace OBJS.API.Models.Transactions
 
         //FK; One Advertisement has a many Bid
         public int AdvertiseID { get; set; }
-        public virtual Advertise Advertises { get; set; }
+        public Advertise Advertises { get; set; }
 
         //FK; One bid has a one Supplier 
         public int CustomerID { get; set; }
-        public virtual Customer Customer { get; set; }
+        public Customer Customer { get; set; }
     }
 }
