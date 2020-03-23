@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+
 using OBJS.API.Models;
 
 namespace OBJS.API
@@ -27,8 +28,9 @@ namespace OBJS.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // call CustomerContext
-            services.AddDbContext<CustomerContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:CustomerDB"]));
+            // create CustomerContext for connection CustomerDB
+            services.AddDbContext<ApplicationContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
+            
             services.AddControllers();
         }
 

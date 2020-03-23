@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OBJS.API.Models
+namespace OBJS.API.Models.Customers
 {
     public class Customer
     {
@@ -9,7 +9,9 @@ namespace OBJS.API.Models
         //column CustomerID will serve as our primary key with the auto-incremented identity.
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CustomerId { get; set; }
+        public int CustomerID { get; set; }
+
+        public bool IsActive { get; set; } = true;
 
         public string Username { get; set; }
 
@@ -23,8 +25,9 @@ namespace OBJS.API.Models
         
         public string CompanyName { get; set; }
         
-        public bool IsActive { get; set; } = true;
-
+        
+        //One-to-One Relations -> Customer-CustomerType, Customer-CustomerDetails
         public virtual CustomerType Type { get; set; }
+        public virtual CustomerDetail Details { get; set; }
     }
 }
