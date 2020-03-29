@@ -5,12 +5,16 @@ namespace OBJS.API.Models.Advertises
 {
     public class AdvertiseState
     {
+        [Key]
         public int AdvertiseStateID { get; set; }
-
+        [Required]
         public bool IsStarted { get; set; } = false;
-
+        [Required]
         public bool IsContinue { get; set; } = false;
-
+        [Required]
         public bool IsFinished { get; set; } = false;
+
+
+        public Advertise Advertise { get; set; }
     }
 }

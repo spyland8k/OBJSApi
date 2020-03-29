@@ -5,12 +5,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200323193653_OBJS_InitialMigration.cs" />
-    <Compile Remove="Migrations\20200323193653_OBJS_InitialMigration.Designer.cs" />
-    <Compile Remove="Migrations\20200323193745_OBJS_InitialMigration.cs" />
-    <Compile Remove="Migrations\20200323193745_OBJS_InitialMigration.Designer.cs" />
-    <Compile Remove="Migrations\20200323194600_Initial_DBMigration.cs" />
-    <Compile Remove="Migrations\20200323194600_Initial_DBMigration.Designer.cs" />
+    <Compile Remove="Migrations\20200328114922_initial.cs" />
+    <Compile Remove="Migrations\20200328114922_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328120148_initial.cs" />
+    <Compile Remove="Migrations\20200328120148_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328121745_initial.cs" />
+    <Compile Remove="Migrations\20200328121745_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328121929_initial.cs" />
+    <Compile Remove="Migrations\20200328121929_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328140950_initial.cs" />
+    <Compile Remove="Migrations\20200328140950_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328141125_initial.cs" />
+    <Compile Remove="Migrations\20200328141125_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328142209_initial.cs" />
+    <Compile Remove="Migrations\20200328142209_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328142602_initial.cs" />
+    <Compile Remove="Migrations\20200328142602_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328143118_initial.cs" />
+    <Compile Remove="Migrations\20200328143118_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328143403_initial.cs" />
+    <Compile Remove="Migrations\20200328143403_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328144309_initial.cs" />
+    <Compile Remove="Migrations\20200328144309_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328145640_initial.cs" />
+    <Compile Remove="Migrations\20200328145640_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200328155829_initial.cs" />
+    <Compile Remove="Migrations\20200328155829_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200329131239_initial.cs" />
+    <Compile Remove="Migrations\20200329131239_initial.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,13 +46,20 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 

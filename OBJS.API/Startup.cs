@@ -28,8 +28,9 @@ namespace OBJS.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // create CustomerContext for connection CustomerDB
-            services.AddDbContext<ApplicationContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
+            // Here UserDbContext is added to application as service by AddDbContext. When initiating ApplicationDBContext are passed 
+            //to define what database type, database name, authentication details if applicable.
+            services.AddDbContext<ApplicationDBContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
             
             services.AddControllers();
         }

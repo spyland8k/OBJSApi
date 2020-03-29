@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OBJS.API.Models.Customers
@@ -7,13 +8,17 @@ namespace OBJS.API.Models.Customers
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        
         public int CustomerdetailID { get; set; }
+
         public string Address { get; set; }
+
         public string City { get; set; }
+
         public int Phone { get; set; }
 
-        //FK Relations
+        [ForeignKey("Customer")]
         public int CustomerID { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
     }
 }
