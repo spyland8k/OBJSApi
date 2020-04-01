@@ -6,10 +6,9 @@ namespace OBJS.API.Models.Customers
 {
     public class CustomerDetail
     {
-        [Key]
+        [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        
-        public int CustomerdetailID { get; set; }
+        public int CustomerdetailId { get; set; }
 
         public string Address { get; set; }
 
@@ -18,7 +17,7 @@ namespace OBJS.API.Models.Customers
         public int Phone { get; set; }
 
         [ForeignKey("Customer")]
-        public int CustomerID { get; set; }
-        public virtual Customer Customer { get; set; }
+        public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
     }
 }

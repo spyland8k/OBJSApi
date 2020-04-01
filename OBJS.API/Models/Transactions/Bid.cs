@@ -8,10 +8,9 @@ namespace OBJS.API.Models.Transactions
 {
     public class Bid
     {
-
-        [Key]
+        [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int BidID { get; set; }
+        public int BidId { get; set; }
 
         [Required]
         public double Price { get; set; }
@@ -23,12 +22,12 @@ namespace OBJS.API.Models.Transactions
 
         //FK; One Advertisement has a many Bid // Cascade delete
         //[ForeignKey("Advertise")]
-        public int AdvertiseID { get; set; }
+        public int AdvertiseId { get; set; }
         public Advertise Advertise { get; set; }
 
         //FK; One bid has a one Supplier // No-Cascade delete
         //[ForeignKey("Customer")]
-        public int CustomerID { get; set; }
+        public int CustomerId { get; set; }
         public Customer Customer { get; set; }
     }
 }

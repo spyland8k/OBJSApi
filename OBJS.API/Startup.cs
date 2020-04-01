@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-
+using OBJS.API.Mapping;
 using OBJS.API.Models;
 
 namespace OBJS.API
@@ -31,7 +32,10 @@ namespace OBJS.API
             // Here UserDbContext is added to application as service by AddDbContext. When initiating ApplicationDBContext are passed 
             //to define what database type, database name, authentication details if applicable.
             services.AddDbContext<ApplicationDBContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
-            
+
+
+            services.AddMvc();
+
             services.AddControllers();
         }
 
@@ -42,6 +46,7 @@ namespace OBJS.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
 
             app.UseHttpsRedirection();
 

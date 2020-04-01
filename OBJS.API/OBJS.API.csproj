@@ -33,9 +33,36 @@
     <Compile Remove="Migrations\20200328155829_initial.Designer.cs" />
     <Compile Remove="Migrations\20200329131239_initial.cs" />
     <Compile Remove="Migrations\20200329131239_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200329183816_initialDB.cs" />
+    <Compile Remove="Migrations\20200329183816_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329193106_initialDB.cs" />
+    <Compile Remove="Migrations\20200329193106_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329195158_initialDB.cs" />
+    <Compile Remove="Migrations\20200329195158_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329200753_initialDB.cs" />
+    <Compile Remove="Migrations\20200329200753_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329202834_initialDB.cs" />
+    <Compile Remove="Migrations\20200329202834_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329203611_initialDB.cs" />
+    <Compile Remove="Migrations\20200329203611_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329204328_initialDB.cs" />
+    <Compile Remove="Migrations\20200329204328_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329204457_initialDB.cs" />
+    <Compile Remove="Migrations\20200329204457_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329204732_initialDB.cs" />
+    <Compile Remove="Migrations\20200329204732_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200329204839_initialDB.cs" />
+    <Compile Remove="Migrations\20200329204839_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200331131042_initialDB.cs" />
+    <Compile Remove="Migrations\20200331131042_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200331144640_initialDB.cs" />
+    <Compile Remove="Migrations\20200331144640_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200401122352_initialDB.cs" />
+    <Compile Remove="Migrations\20200401122352_initialDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.2" />
@@ -56,10 +83,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 

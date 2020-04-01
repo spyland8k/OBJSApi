@@ -6,7 +6,7 @@ namespace OBJS.API.Models.Advertises
     public class AdvertiseState
     {
         [Key]
-        public int AdvertiseStateID { get; set; }
+        public int AdvertiseStateId { get; set; }
         [Required]
         public bool IsStarted { get; set; } = false;
         [Required]

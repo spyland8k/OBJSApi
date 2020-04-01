@@ -1,6 +1,7 @@
 ﻿using OBJS.API.Models.Advertises;
-using OBJS.API.Models.Products;
+using OBJS.API.Models.Categories;
 using OBJS.API.Models.Transactions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,27 +10,24 @@ namespace OBJS.API.Models.Customers
 {
     public class Customer
     {
-        public Customer()
-        {
-            //FeedbackFrom = new HashSet<Feedback>();
-            //FeedbackTo = new HashSet<Feedback>();
-        }
-
         //We did this because we will be converting this class into a database table and the 
-        //column CustomerID will serve as our primary key with the auto-incremented identity.
-        [Key]
+        //column CustomerId will serve as our primary key with the auto-incremented identity.
+        [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CustomerID { get; set; }
+        public int CustomerId { get; set; }
 
         public bool IsActive { get; set; } = true;
         [Required]
         public string Username { get; set; }
 
         [Required]
+        //[DataType(DataType.Password)]
         public string Password { get; set; }
 
+        [DisplayFormat(NullDisplayText = "Null name")]
         public string Name { get; set; }
-        
+
+        [DisplayFormat(NullDisplayText = "Null surname")]
         public string Surname { get; set; }
         
         public string Email { get; set; }
@@ -44,12 +42,12 @@ namespace OBJS.API.Models.Customers
 
         public ICollection<CustomerDetail> CustomerDetails { get; set; }
 
-        public Advertise Advertise { get; set; }
+        public ICollection<Advertise> Advertises { get; set; }
 
         public ICollection<Bid> Bids { get; set; }
 
-        public virtual ICollection<Feedback> FeedbackFrom { get; set; }
+        public ICollection<Feedback> FeedbackFrom { get; set; }
 
-        public virtual ICollection<Feedback> FeedbackTo { get; set; }
+        public ICollection<Feedback> FeedbackTo { get; set; }
     }
 }

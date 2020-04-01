@@ -12,16 +12,16 @@ namespace OBJS.API.Models.Advertises
 
         }
 
-        [Key]
+        [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AdvertisefeedbackID { get; set; }
+        public int AdvertisefeedbackId { get; set; }
         public string Title { get; set; }
         public string Comment { get; set; }
         //integer 0-5
         public int Star { get; set; }
 
 
-        public int AdvertiseID { get; set; }
+        public int AdvertiseId { get; set; }
         public Advertise Advertises { get; set; }
 
         //Feedback FROM
@@ -30,6 +30,6 @@ namespace OBJS.API.Models.Advertises
 
         //Feedback TO
         public int BidderID { get; set; }
-        public virtual Customer BidderCustomer { get; set; }
+        public Customer BidderCustomer { get; set; }
     }
 }

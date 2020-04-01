@@ -6,9 +6,9 @@ namespace OBJS.API.Models.Advertises
 {
     public class AdvertiseDetail
     {
-        [Key]
+        [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AdvertiseDetailID { get; set; }
+        public int AdvertiseDetailId { get; set; }
 
         public string Title { get; set; }
         public string Description { get; set; }
@@ -16,7 +16,7 @@ namespace OBJS.API.Models.Advertises
 
 
 
-        public int AdvertiseID { get; set; }
+        public int AdvertiseId { get; set; }
         public Advertise Advertise { get; set; }
     }
 }
