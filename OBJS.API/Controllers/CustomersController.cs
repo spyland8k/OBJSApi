@@ -25,6 +25,7 @@ namespace OBJS.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
+            //Verilerin gizliliği için, controller'da kullanılan her sınıf için DTO eklenecek.
             return await _context.Customers.ToListAsync();
         }
 
@@ -72,12 +73,11 @@ namespace OBJS.API.Controllers
                 }
                 else
                 {
-                    //Response.Body("Güncelleme başarılı, kullanıcı id:" + id);
                     throw;
                 }
             }
 
-            return NoContent();
+            return Content(id + " numaralı kullanıcının bilgileri güncellendi.");
         }
 
         // POST: api/Customers
@@ -94,7 +94,8 @@ namespace OBJS.API.Controllers
 
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
         }
-
+        
+        /*
         // DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Customer>> DeleteCustomer(int id)
@@ -109,8 +110,8 @@ namespace OBJS.API.Controllers
             await _context.SaveChangesAsync();
 
             return customer;
-        }
-
+        }*/
+        
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
