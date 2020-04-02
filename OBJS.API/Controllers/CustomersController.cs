@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OBJS.API.Models;
 using OBJS.API.Models.Customers;
 
@@ -37,18 +39,41 @@ namespace OBJS.API.Controllers
 
             if (customer == null)
             {
-                return NotFound();
+                return NotFound(id + " numaralı kullanıcı yoktur.");
             }
 
             return customer;
         }
 
+        // GET: api/Customer/5/Details
+        [HttpGet("{id:int}/details", Name = "GetCustomerDetailbyId")]
+        public async Task<ActionResult> GetCustomerDetailbyId(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound("Sistemde" + id + " numaralı kullanıcı yoktur.");
+            }
+
+            var customerdetail = await _context.CustomerDetails.FindAsync(id);
+
+            if(customerdetail == null)
+            {
+
+            }
+
+            customer.CustomerDetails.Add(customerdetail);
+
+            return Ok(customer);
+        }
+
+
         // PUT: api/Customers/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
+
             if (customer == null)
             {
                 return BadRequest("Gönderilen içerik boş olamaz");
@@ -80,9 +105,9 @@ namespace OBJS.API.Controllers
             return Content(id + " numaralı kullanıcının bilgileri güncellendi.");
         }
 
+
+
         // POST: api/Customers
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
@@ -94,9 +119,45 @@ namespace OBJS.API.Controllers
 
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
         }
-        
-        /*
-        // DELETE: api/Customers/5
+
+
+        // Post: api/Customers/5/details
+        [HttpPost("{id:int}/details", Name = "PostCustomerDetailbyId")]
+        public async Task<ActionResult> PostCustomerDetailbyId(int id, Customer customer)
+        {
+            if (customer == null)
+            {
+                return BadRequest("İçerik boş olamaz.");
+            }
+
+            var c = await _context.Customers.FindAsync(id);
+
+            if (id != customer.CustomerId)
+            {
+                return BadRequest("Yetkisiz üye, tekrar giriş yapın.");
+            }
+
+            if(c == null)
+            {
+                return BadRequest("Kullanıcı bulunamadı.");
+            }
+
+            //Recieving JSON data, filling customerdetails table.
+            var customerDetail = new CustomerDetail();
+            customerDetail.CustomerId = customer.CustomerId;
+            customerDetail.Address = customer.CustomerDetails.FirstOrDefault().Address;
+            customerDetail.City = customer.CustomerDetails.FirstOrDefault().City;
+            customerDetail.Phone = customer.CustomerDetails.FirstOrDefault().Phone;
+
+            _context.CustomerDetails.Add(customerDetail);
+            
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        /* DELETE: api/Customers/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Customer>> DeleteCustomer(int id)
         {
@@ -111,21 +172,17 @@ namespace OBJS.API.Controllers
 
             return customer;
         }*/
-        
+
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
         }
 
-        private void AssingCustomerId(Customer customer)
+        private void AssingCustomerDetails(CustomerDetail customerDetail)
         {
             //Add CustomerId to CustomerDetails Entity
-            if(customer.CustomerDetails.Count != 0)
-
-            for (int i = 0; i < customer.CustomerDetails.Count(); ++i)
-            {
-                customer.CustomerDetails.ElementAt(i).CustomerId = customer.CustomerId;
-            }
+            
         }
+
     }
 }

@@ -10,6 +10,11 @@ namespace OBJS.API.Models.Customers
 {
     public class Customer
     {
+        public Customer()
+        {
+            CustomerDetails = new HashSet<CustomerDetail>();
+        }
+
         //We did this because we will be converting this class into a database table and the 
         //column CustomerId will serve as our primary key with the auto-incremented identity.
         [Key, Column(Order = 1)]

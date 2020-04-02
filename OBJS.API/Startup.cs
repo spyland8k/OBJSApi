@@ -32,9 +32,22 @@ namespace OBJS.API
             // Here UserDbContext is added to application as service by AddDbContext. When initiating ApplicationDBContext are passed 
             //to define what database type, database name, authentication details if applicable.
             services.AddDbContext<ApplicationDBContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
+            
+            /*
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.AutomaticAuthentication = false;
+            });*/
 
 
-            services.AddMvc();
+            //This is a new feature in ASP.NET Core 2.2:
+            //An IActionResult returning a client error status code(4xx) now returns a ProblemDetails body.
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                });
 
             services.AddControllers();
         }
