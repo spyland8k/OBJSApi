@@ -111,7 +111,6 @@ namespace OBJS.API.Controllers
             return Content(id + " numaralı kullanıcının bilgileri güncellendi.");
         }
 
-        //ASDASDASDASD
 
         // POST: api/Customers
         [HttpPost]
