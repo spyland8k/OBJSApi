@@ -45,6 +45,9 @@ namespace OBJS.API.Controllers
             return customer;
         }
 
+        /* @param int $id
+        * Parametre'den gelen $id ile CustomerDetail'daki $CustomerId(FK) değerini arayıp eşleşen, Customer'ın tüm bilgileri getirir.
+        */
         // GET: api/Customer/5/Details
         [HttpGet("{id:int}/details", Name = "GetCustomerDetailbyId")]
         public async Task<ActionResult> GetCustomerDetailbyId(int id)
@@ -56,11 +59,14 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde" + id + " numaralı kullanıcı yoktur.");
             }
 
-            var customerdetail = await _context.CustomerDetails.FindAsync(id);
+            
+            var customerdetail = await _context.CustomerDetails.AsNoTracking()
+                .Include(p => p.Customer)
+                .FirstOrDefaultAsync(c => c.CustomerId == id);
 
             if(customerdetail == null)
             {
-
+                return NotFound(id + " numaralı kullanıcının detaylı bilgisi yoktur.");
             }
 
             customer.CustomerDetails.Add(customerdetail);
@@ -151,7 +157,7 @@ namespace OBJS.API.Controllers
 
             _context.CustomerDetails.Add(customerDetail);
             
-
+            //DB de yapılan değişiklikleri asenkron olarak günceller.
             await _context.SaveChangesAsync();
 
             return Ok();

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OBJS.API.Mapping;
 using OBJS.API.Models;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
 namespace OBJS.API
 {
@@ -48,6 +49,12 @@ namespace OBJS.API
                 {
                     options.SuppressModelStateInvalidFilter = true;
                 });
+
+
+            // Another using [JsonIgnore]; need to add the attribute to all the models, we may have the cyclic reference.
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
 
             services.AddControllers();
         }
