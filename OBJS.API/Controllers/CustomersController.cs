@@ -23,6 +23,8 @@ namespace OBJS.API.Controllers
             _context = context;
         }
 
+        /* Get all customers registered on Database; Select * from Customers
+         */
         // GET: api/Customers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
@@ -59,7 +61,6 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde" + id + " numaralı kullanıcı yoktur.");
             }
 
-            
             var customerdetail = await _context.CustomerDetails.AsNoTracking()
                 .Include(p => p.Customer)
                 .FirstOrDefaultAsync(c => c.CustomerId == id);
@@ -111,6 +112,8 @@ namespace OBJS.API.Controllers
             return Content(id + " numaralı kullanıcının bilgileri güncellendi.");
         }
 
+        // PUT: api/Customers/5/details
+        //----------
 
         // POST: api/Customers
         [HttpPost]
@@ -162,31 +165,9 @@ namespace OBJS.API.Controllers
             return Ok();
         }
 
-        /* DELETE: api/Customers/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Customer>> DeleteCustomer(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
-            return customer;
-        }*/
-
         private bool CustomerExists(int id)
         {
             return _context.Customers.Any(e => e.CustomerId == id);
-        }
-
-        private void AssingCustomerDetails(CustomerDetail customerDetail)
-        {
-            //Add CustomerId to CustomerDetails Entity
-            
         }
 
     }

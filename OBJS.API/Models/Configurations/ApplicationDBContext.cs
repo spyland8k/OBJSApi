@@ -41,13 +41,11 @@ namespace OBJS.API.Models
                 entity.HasOne(k => k.OwnerCustomer)
                     .WithMany(n => n.FeedbackFrom)
                     .HasForeignKey(c => c.OwnerID)
-                    .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
 
                 entity.HasOne(k => k.BidderCustomer)
                     .WithMany(c => c.FeedbackTo)
                     .HasForeignKey(c => c.BidderID)
-                    .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -58,13 +56,11 @@ namespace OBJS.API.Models
                 entity.HasOne(b => b.Customer)
                     .WithMany(c => c.Bids)
                     .HasForeignKey(c => c.CustomerId)
-                    .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
 
                 entity.HasOne(b => b.Advertise)
                     .WithMany(a => a.Bids)
                     .HasForeignKey(a => a.AdvertiseId)
-                    .IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
@@ -73,9 +69,11 @@ namespace OBJS.API.Models
                 entity.HasKey(k => k.AdvertiseId);
 
                 entity.HasOne(b => b.Advertisestate)
-                    .WithOne(c => c.Advertise)
+                    .WithMany(s => s.Advertises)
+                    .HasForeignKey(a => a.AdvertiseStateId)
                     .OnDelete(DeleteBehavior.NoAction);
                 
+
                 entity.HasOne(b => b.Category)
                     .WithMany(c => c.Advertises)
                     .HasForeignKey(c => c.CategoryId)

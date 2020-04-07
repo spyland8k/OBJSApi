@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OBJS.API.Models.Advertises
@@ -15,6 +16,6 @@ namespace OBJS.API.Models.Advertises
         public bool IsFinished { get; set; } = false;
 
 
-        public Advertise Advertise { get; set; }
+        public ICollection<Advertise> Advertises { get; set; }
     }
 }

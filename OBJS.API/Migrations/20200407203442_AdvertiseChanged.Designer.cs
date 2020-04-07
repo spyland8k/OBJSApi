@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OBJS.API.Models;
 
 namespace OBJS.API.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20200407203442_AdvertiseChanged")]
+    partial class AdvertiseChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,8 +47,6 @@ namespace OBJS.API.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("AdvertiseId");
-
-                    b.HasIndex("AdvertiseStateId");
 
                     b.HasIndex("CategoryId");
 
@@ -88,6 +88,9 @@ namespace OBJS.API.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AdvertiseId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsContinue")
                         .HasColumnType("bit");
 
@@ -98,6 +101,8 @@ namespace OBJS.API.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("AdvertiseStateId");
+
+                    b.HasIndex("AdvertiseId");
 
                     b.ToTable("AdvertiseStates");
 
@@ -356,12 +361,6 @@ namespace OBJS.API.Migrations
 
             modelBuilder.Entity("OBJS.API.Models.Advertises.Advertise", b =>
                 {
-                    b.HasOne("OBJS.API.Models.Advertises.AdvertiseState", "Advertisestate")
-                        .WithMany("Advertises")
-                        .HasForeignKey("AdvertiseStateId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("OBJS.API.Models.Categories.Category", "Category")
                         .WithMany("Advertises")
                         .HasForeignKey("CategoryId")
@@ -382,6 +381,14 @@ namespace OBJS.API.Migrations
                         .HasForeignKey("AdvertiseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("OBJS.API.Models.Advertises.AdvertiseState", b =>
+                {
+                    b.HasOne("OBJS.API.Models.Advertises.Advertise", "Advertise")
+                        .WithMany("Advertisestates")
+                        .HasForeignKey("AdvertiseId")
+                        .OnDelete(DeleteBehavior.NoAction);
                 });
 
             modelBuilder.Entity("OBJS.API.Models.Advertises.Feedback", b =>
