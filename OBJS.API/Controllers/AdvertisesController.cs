@@ -32,20 +32,13 @@ namespace OBJS.API.Controllers
                 var advertisedetail = await _context.AdvertiseDetails
                     .Include(d => d.Advertise)
                     .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
-                
-                if(advertisedetail != null)
-                {
-                     advertise.AdvertiseDetails.Add(advertisedetail);
-                }
-                
-
             }
 
             return advertises;
         }
 
         // GET: api/Advertises/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Advertise>> GetAdvertise(int id)
         {
             var advertise = await _context.Advertises.FindAsync(id);
@@ -56,6 +49,19 @@ namespace OBJS.API.Controllers
             }
 
             return advertise;
+        }
+
+        // GET: api/Advertises/Categories/5
+        /* İlanları CategoryId'lere göre filtrele 
+         */
+        [HttpGet("Categories/{id:int}")]
+        public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertiseByCategoryId(int id)
+        {
+            var advertises = await _context.Advertises.ToListAsync();
+
+            
+
+            return advertises;
         }
 
         // PUT: api/Advertises/5

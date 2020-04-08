@@ -29,8 +29,20 @@ namespace OBJS.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            //Verilerin gizliliği için, controller'da kullanılan her sınıf için DTO eklenecek.
-            return await _context.Customers.ToListAsync();
+            /*Verilerin gizliliği için, controller'da kullanılan her sınıf için DTO veya
+             * O sınıflardaki attribute'ların [JsonIgnore] ile tanımlanması gerekiyor.
+            */
+            var customers = await _context.Customers.ToListAsync();
+
+
+            foreach (var customer in customers)
+            {
+                var customerdetail = await _context.CustomerDetails
+                    .Include(d => d.Customer)
+                    .FirstOrDefaultAsync(a => a.CustomerId == customer.CustomerId);
+            }
+
+            return customers;
         }
 
         // GET: api/Customers/5
