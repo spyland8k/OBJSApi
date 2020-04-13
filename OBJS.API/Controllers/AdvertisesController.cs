@@ -58,10 +58,17 @@ namespace OBJS.API.Controllers
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertiseByCategoryId(int id)
         {
             var advertises = await _context.Advertises.ToListAsync();
+            List<Advertise> categoryadvertises = new List<Advertise>();
 
-            
+            foreach (var advertise in advertises)
+            {
+                if(advertise.CategoryId == id)
+                {
+                    categoryadvertises.Add(advertise);
+                }
+            }
 
-            return advertises;
+            return categoryadvertises;
         }
 
         // PUT: api/Advertises/5
@@ -105,27 +112,6 @@ namespace OBJS.API.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAdvertise", new { id = advertise.AdvertiseId }, advertise);
-        }
-
-        // DELETE: api/Advertises/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Advertise>> DeleteAdvertise(int id)
-        {
-            var advertise = await _context.Advertises.FindAsync(id);
-            if (advertise == null)
-            {
-                return NotFound();
-            }
-
-            _context.Advertises.Remove(advertise);
-            await _context.SaveChangesAsync();
-
-            return advertise;
-        }
-
-        private bool AdvertiseExists(int id)
-        {
-            return _context.Advertises.Any(e => e.AdvertiseId == id);
         }
     }
 }
