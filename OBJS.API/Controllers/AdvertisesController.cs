@@ -113,5 +113,10 @@ namespace OBJS.API.Controllers
 
             return CreatedAtAction("GetAdvertise", new { id = advertise.AdvertiseId }, advertise);
         }
+
+        private bool AdvertiseExists(int id)
+        {
+            return _context.Advertises.Any(e => e.AdvertiseId == id);
+        }
     }
 }
