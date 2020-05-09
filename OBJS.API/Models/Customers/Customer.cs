@@ -40,12 +40,11 @@ namespace OBJS.API.Models.Customers
         [DisplayFormat(NullDisplayText = "Null surname")]
         public string Surname { get; set; }
 
-        [Required]
         public string Email { get; set; }
 
         [DisplayFormat(NullDisplayText = "Şirket Değil")]
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$")]
-        public string? CompanyName { get; set; }
+        public string CompanyName { get; set; }
 
         [Required]
         public bool IsCustomer { get; set; } = true;
