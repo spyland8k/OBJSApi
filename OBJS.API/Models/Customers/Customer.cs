@@ -23,7 +23,6 @@ namespace OBJS.API.Models.Customers
 
         public bool IsActive { get; set; } = true;
 
-        [Key, Column(Order = 2)]
         [Required]
         public string Username { get; set; }
 
@@ -32,16 +31,21 @@ namespace OBJS.API.Models.Customers
         public string Password { get; set; }
 
         [DisplayFormat(NullDisplayText = "Null name")]
+        // Allow up to 40 uppercase and lowercase 
+        // characters. Use standard error.
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$")]
+        //ErrorMessage = "Characters are not allowed.")
         public string Name { get; set; }
 
         [DisplayFormat(NullDisplayText = "Null surname")]
         public string Surname { get; set; }
 
-        [Key, Column(Order = 3)]
         [Required]
         public string Email { get; set; }
-        
-        public string CompanyName { get; set; }
+
+        [DisplayFormat(NullDisplayText = "Şirket Değil")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$")]
+        public string? CompanyName { get; set; }
 
         [Required]
         public bool IsCustomer { get; set; } = true;
@@ -49,14 +53,14 @@ namespace OBJS.API.Models.Customers
         public bool IsSupplier { get; set; } = false;
 
 
-        public ICollection<CustomerDetail> CustomerDetails { get; set; }
+        public virtual ICollection<CustomerDetail> CustomerDetails { get; set; }
 
-        public ICollection<Advertise> Advertises { get; set; }
+        public virtual ICollection<Advertise> Advertises { get; set; }
 
-        public ICollection<Bid> Bids { get; set; }
+        public virtual ICollection<Bid> Bids { get; set; }
 
-        public ICollection<Feedback> FeedbackFrom { get; set; }
+        public virtual ICollection<Feedback> FeedbackFrom { get; set; }
 
-        public ICollection<Feedback> FeedbackTo { get; set; }
+        public virtual ICollection<Feedback> FeedbackTo { get; set; }
     }
 }

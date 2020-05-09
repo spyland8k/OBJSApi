@@ -19,9 +19,12 @@ namespace OBJS.API.Models.Advertises
         // Only Admin can change
         public bool IsActive { get; set; } = true;
 
-        //[DataType(DataType.Date)]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Startdate { get; set; }
-        //[DataType(DataType.Date)]
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
 

@@ -34,7 +34,7 @@ namespace OBJS.API.Models.Categories
         //public ICollection<Category> SubCategories { get; set; }
 
         // subcategory has many products, N-N
-        public ICollection<Advertise> Advertises { get; set; }
+        public virtual ICollection<Advertise> Advertises { get; set; }
 
     }
 }

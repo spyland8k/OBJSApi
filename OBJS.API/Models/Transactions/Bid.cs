@@ -30,6 +30,6 @@ namespace OBJS.API.Models.Transactions
         public int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
 
-        public virtual ICollection<Bid> Bids { get; set; }
+        //public ICollection<Bid> Bids { get; set; }
     }
 }

@@ -59,6 +59,16 @@
     <Compile Remove="Migrations\20200331144640_initialDB.Designer.cs" />
     <Compile Remove="Migrations\20200401122352_initialDB.cs" />
     <Compile Remove="Migrations\20200401122352_initialDB.Designer.cs" />
+    <Compile Remove="Migrations\20200509145223_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509145223_modelschanged.Designer.cs" />
+    <Compile Remove="Migrations\20200509145622_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509145622_modelschanged.Designer.cs" />
+    <Compile Remove="Migrations\20200509145810_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509145810_modelschanged.Designer.cs" />
+    <Compile Remove="Migrations\20200509150037_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509150037_modelschanged.Designer.cs" />
+    <Compile Remove="Migrations\20200509150136_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509150136_modelschanged.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
