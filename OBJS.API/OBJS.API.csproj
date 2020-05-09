@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>
@@ -69,6 +74,10 @@
     <Compile Remove="Migrations\20200509150037_modelschanged.Designer.cs" />
     <Compile Remove="Migrations\20200509150136_modelschanged.cs" />
     <Compile Remove="Migrations\20200509150136_modelschanged.Designer.cs" />
+    <Compile Remove="Migrations\20200509150714_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509150714_modelschanged.Designer.cs" />
+    <Compile Remove="Migrations\20200509151527_modelschanged.cs" />
+    <Compile Remove="Migrations\20200509151527_modelschanged.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -79,15 +79,13 @@ namespace OBJS.API.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost("Advertises/{id:int}/Bids", Name = "PostAdvertiseBidbyId")]
-        public async Task<ActionResult<Bid>> PostBid(int id, Advertise advertise, Bid bid)
+        public async Task<ActionResult<Bid>> PostBid(int id, Bid bid)
         {
-            if(advertise == null || bid == null)
+            if(bid == null)
             {
                 return BadRequest("İlan veya Teklif içeriği boş olamaz");
             }
 
-
-            _context.Advertises.FirstOrDefault().Bids.Add(bid);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBid", new { id = bid.BidId }, bid);
