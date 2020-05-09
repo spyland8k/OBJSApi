@@ -22,6 +22,8 @@ namespace OBJS.API.Models.Customers
         public int CustomerId { get; set; }
 
         public bool IsActive { get; set; } = true;
+
+        [Key, Column(Order = 2)]
         [Required]
         public string Username { get; set; }
 
@@ -34,7 +36,9 @@ namespace OBJS.API.Models.Customers
 
         [DisplayFormat(NullDisplayText = "Null surname")]
         public string Surname { get; set; }
-        
+
+        [Key, Column(Order = 3)]
+        [Required]
         public string Email { get; set; }
         
         public string CompanyName { get; set; }

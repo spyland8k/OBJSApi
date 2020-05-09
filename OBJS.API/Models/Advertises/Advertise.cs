@@ -32,14 +32,14 @@ namespace OBJS.API.Models.Advertises
         public AdvertiseState Advertisestate { get; set; }
 
         // 1-1 
-        public Feedback Feedback { get; set; }
+        public virtual Feedback Feedback { get; set; }
 
 
         // N-N / one Advertise has a many AdvertiseDetail
         public ICollection<AdvertiseDetail> AdvertiseDetails { get; set; }
 
         //
-        public ICollection<Bid> Bids { get; set; }
+        public virtual ICollection<Bid> Bids { get; set; }
 
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
@@ -47,6 +47,5 @@ namespace OBJS.API.Models.Advertises
         //Owner of the advertise
         public int CustomerId { get; set; }
         public virtual Customer Customer { get; set; }
-
     }
 }
