@@ -15,7 +15,7 @@ namespace OBJS.API.Models.Transactions
         [Required]
         public double Price { get; set; }
 
-        // How many days in that job will be done
+        // How many [days] in that job will be done
         [Required]
         public int Duration { get; set; }
 
@@ -23,11 +23,13 @@ namespace OBJS.API.Models.Transactions
         //FK; One Advertisement has a many Bid // Cascade delete
         //[ForeignKey("Advertise")]
         public int AdvertiseId { get; set; }
-        public Advertise Advertise { get; set; }
+        public virtual Advertise Advertise { get; set; }
 
         //FK; One bid has a one Supplier // No-Cascade delete
         //[ForeignKey("Customer")]
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
+
+        //public ICollection<Bid> Bids { get; set; }
     }
 }

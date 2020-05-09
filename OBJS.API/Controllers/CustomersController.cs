@@ -140,9 +140,8 @@ namespace OBJS.API.Controllers
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
         }
 
-
-        // Post: api/Customers/5/details
-        [HttpPost("{id:int}/details", Name = "PostCustomerDetailbyId")]
+        // Post: api/Customers/5/Details
+        [HttpPost("{id:int}/Details", Name = "PostCustomerDetailbyId")]
         public async Task<ActionResult> PostCustomerDetailbyId(int id, Customer customer)
         {
             if (customer == null)
@@ -174,7 +173,7 @@ namespace OBJS.API.Controllers
             //DB de yapılan değişiklikleri asenkron olarak günceller.
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok("Kullanıcı detayı eklendi!");
         }
 
         private bool CustomerExists(int id)

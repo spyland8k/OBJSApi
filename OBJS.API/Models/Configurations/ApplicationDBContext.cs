@@ -67,7 +67,7 @@ namespace OBJS.API.Models
             modelBuilder.Entity<Advertise>(entity =>
             {
                 entity.HasKey(k => k.AdvertiseId);
-
+                
                 entity.HasOne(b => b.Advertisestate)
                     .WithMany(s => s.Advertises)
                     .HasForeignKey(a => a.AdvertiseStateId)
@@ -82,8 +82,14 @@ namespace OBJS.API.Models
                     .WithMany(c => c.Advertises)
                     .HasForeignKey(c => c.CustomerId)
                     .OnDelete(DeleteBehavior.NoAction);
-
             });
+            
+            /*modelBuilder.Entity<Customer>(entity =>
+            {
+                entity.HasKey(k => k.CustomerId);
+                entity.HasKey(k => k.Username);
+                entity.HasKey(k => k.Email);
+            });*/
 
             //Entity seeding data initializer
             modelBuilder.Entity<AdvertiseState>(entity =>
@@ -113,10 +119,8 @@ namespace OBJS.API.Models
                     new Category { CategoryId = 11, Name = "Elektrik Tesisatçısı", ParentID = 10 },
                     new Category { CategoryId = 12, Name = "Su Tesisatçısı", ParentID = 10, }
                     );
-
             });
 
         }
-
     }
 }

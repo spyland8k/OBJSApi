@@ -21,6 +21,7 @@ namespace OBJS.API.Controllers
             _context = context;
         }
 
+        // ASP.NET Core will automatically bind form values, route values and query strings by name
         // GET: api/Advertises
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises()
@@ -52,7 +53,7 @@ namespace OBJS.API.Controllers
         }
 
         // GET: api/Advertises/Categories/5
-        /* İlanları CategoryId'lere göre filtrele 
+        /* Filter categories by categoryId 
          */
         [HttpGet("Categories/{id:int}")]
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertiseByCategoryId(int id)
@@ -72,14 +73,17 @@ namespace OBJS.API.Controllers
         }
 
         // PUT: api/Advertises/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdvertise(int id, Advertise advertise)
         {
+            if ( advertise == null)
+            {
+                return BadRequest("Gönderilen içerik boş olamaz");
+            }
+
             if (id != advertise.AdvertiseId)
             {
-                return BadRequest();
+                return BadRequest("Sistemde bu ilan bulunmamaktadır");
             }
 
             _context.Entry(advertise).State = EntityState.Modified;
@@ -112,6 +116,41 @@ namespace OBJS.API.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAdvertise", new { id = advertise.AdvertiseId }, advertise);
+        }
+
+        // inserting to the db all of coming data from client about advertise details.
+        // POST: api/Advertises/5/Details
+        [HttpPost("Advertises/{id:int}/Details", Name = "PostAdvertiseDetailbyId")]
+        public async Task<ActionResult<Advertise>> PostAdvertiseDetailbyId(int id, Advertise advertise)
+        {
+            if(advertise == null)
+            {
+                return BadRequest("İçerik boş olamaz");
+            }
+
+            var c = await _context.Advertises.FindAsync(id);
+
+            if(id != advertise.AdvertiseId)
+            {
+                return BadRequest("İlana erişim yetkisi bulunmuyor");
+            }
+
+            if(c == null)
+            {
+                return BadRequest("İlan bulunmamaktadır");
+            }
+
+            var advertiseDetail = new AdvertiseDetail();
+            advertiseDetail.AdvertiseId = advertise.AdvertiseId;
+            advertiseDetail.Title = advertise.AdvertiseDetails.FirstOrDefault().Title;
+            advertiseDetail.Description = advertise.AdvertiseDetails.FirstOrDefault().Description;
+            advertiseDetail.ImagePath = advertise.AdvertiseDetails.FirstOrDefault().ImagePath;
+
+            _context.AdvertiseDetails.Add(advertiseDetail);
+
+            await _context.SaveChangesAsync();
+
+            return Ok("İlan detayı eklendi!");
         }
 
         private bool AdvertiseExists(int id)

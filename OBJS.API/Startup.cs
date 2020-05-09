@@ -34,9 +34,11 @@ namespace OBJS.API
             //to define what database type, database name, authentication details if applicable.
             services.AddDbContext<ApplicationDBContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
 
+
+            /*
             // Get the database context and apply the migrations (azure database automatic migrations EF Codefirst)
             var context = services.BuildServiceProvider().GetService<ApplicationDBContext>();
-            context.Database.Migrate();
+            context.Database.Migrate();*/
 
             /*
             services.Configure<IISServerOptions>(options =>
