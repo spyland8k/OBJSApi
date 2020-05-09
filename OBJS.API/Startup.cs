@@ -33,13 +33,16 @@ namespace OBJS.API
             // Here UserDbContext is added to application as service by AddDbContext. When initiating ApplicationDBContext are passed 
             //to define what database type, database name, authentication details if applicable.
             services.AddDbContext<ApplicationDBContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
-            
+
+            // Get the database context and apply the migrations (azure database automatic migrations EF Codefirst)
+            var context = services.BuildServiceProvider().GetService<ApplicationDBContext>();
+            context.Database.Migrate();
+
             /*
             services.Configure<IISServerOptions>(options =>
             {
                 options.AutomaticAuthentication = false;
             });*/
-
 
             //This is a new feature in ASP.NET Core 2.2:
             //An IActionResult returning a client error status code(4xx) now returns a ProblemDetails body.

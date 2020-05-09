@@ -73,7 +73,6 @@ namespace OBJS.API.Models
                     .HasForeignKey(a => a.AdvertiseStateId)
                     .OnDelete(DeleteBehavior.NoAction);
                 
-
                 entity.HasOne(b => b.Category)
                     .WithMany(c => c.Advertises)
                     .HasForeignKey(c => c.CategoryId)
@@ -85,9 +84,6 @@ namespace OBJS.API.Models
                     .OnDelete(DeleteBehavior.NoAction);
 
             });
-
-
-            
 
             //Entity seeding data initializer
             modelBuilder.Entity<AdvertiseState>(entity =>
