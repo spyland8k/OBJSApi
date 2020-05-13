@@ -28,6 +28,11 @@ namespace OBJS.API.Controllers
         {
             var advertises = await _context.Advertises.ToListAsync();
 
+            if (advertises == null)
+            {
+                return NotFound("Sistemde kayıtlı ilan bulunmuyor");
+            }
+
             foreach (var advertise in advertises)
             {
                 var advertisedetail = await _context.AdvertiseDetails
@@ -46,8 +51,12 @@ namespace OBJS.API.Controllers
 
             if (advertise == null)
             {
-                return NotFound();
+                return NotFound("Sistemde " + id + "'ye sahip ilan bulunmuyor");
             }
+
+            var advertisedetail = await _context.AdvertiseDetails
+                    .Include(d => d.Advertise)
+                    .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
 
             return advertise;
         }

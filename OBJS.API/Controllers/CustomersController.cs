@@ -23,7 +23,7 @@ namespace OBJS.API.Controllers
             _context = context;
         }
 
-        /* Get all customers registered on Database; Select * from Customers
+        /* Get all customers registered on Database(context is contains datas); Select * from Customers
          */
         // GET: api/Customers
         [HttpGet]
@@ -53,7 +53,7 @@ namespace OBJS.API.Controllers
 
             if (customer == null)
             {
-                return NotFound(id + " numaralı kullanıcı yoktur.");
+                return NotFound(id + " numaraya sahip kullanıcı yoktur.");
             }
 
             return customer;
@@ -70,7 +70,7 @@ namespace OBJS.API.Controllers
 
             if (customer == null)
             {
-                return NotFound("Sistemde" + id + " numaralı kullanıcı yoktur.");
+                return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
             }
 
             var customerdetail = await _context.CustomerDetails.AsNoTracking()
@@ -86,7 +86,6 @@ namespace OBJS.API.Controllers
 
             return Ok(customer);
         }
-
 
         // PUT: api/Customers/5
         [HttpPut("{id}")]
@@ -131,6 +130,20 @@ namespace OBJS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
+            if(customer == null)
+            {
+                return BadRequest("Gönderilen içerik boş olamaz");
+            }
+            switch (CustomerValidation(customer))
+            {
+                case 1:
+                    return BadRequest("Bu username sistemde kayıtlıdır");
+                case 2:
+                    return BadRequest("Bu email sistemde kayıtlıdır");
+                default:
+                    break;
+            }
+
             _context.Customers.Add(customer);
 
             //AssingCustomerId(customer);
@@ -170,16 +183,39 @@ namespace OBJS.API.Controllers
 
             _context.CustomerDetails.Add(customerDetail);
             
-            //DB de yapılan değişiklikleri asenkron olarak günceller.
+            //Save asyncronized changes on dbcontext
             await _context.SaveChangesAsync();
 
-            return Ok("Kullanıcı detayı eklendi!");
+            return Content("Kullanıcı detayı eklendi!");
+        }
+
+
+        //Send customer to the method, it checks if user is in the system
+        private int CustomerValidation(Customer customer)
+        {
+            if (CustomerUsernameExists(customer))
+            {
+                return 1;
+            }else if(CustomerEmailExists(customer))
+            {
+                return 2;
+            }
+            return 0;
         }
 
         private bool CustomerExists(int id)
         {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return _context.Customers.Any(c => c.CustomerId == id);
         }
 
+        private bool CustomerUsernameExists(Customer customer)
+        {
+            return _context.Customers.Any(c => c.Username == customer.Username);
+        }
+
+        private bool CustomerEmailExists(Customer customer)
+        {
+            return _context.Customers.Any(c => c.Email == customer.Email);
+        }
     }
 }

@@ -15,6 +15,10 @@ using Microsoft.Extensions.Logging;
 using OBJS.API.Mapping;
 using OBJS.API.Models;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Identity;
 
 namespace OBJS.API
 {
@@ -32,13 +36,27 @@ namespace OBJS.API
         {
             // Here UserDbContext is added to application as service by AddDbContext. When initiating ApplicationDBContext are passed 
             //to define what database type, database name, authentication details if applicable.
-            services.AddDbContext<ApplicationDBContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
-
+            services.AddDbContext<ApplicationDBContext>(
+                options => options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
 
             
             // Get the database context and apply the migrations (azure database automatic migrations EF Codefirst)
             var context = services.BuildServiceProvider().GetService<ApplicationDBContext>();
             context.Database.Migrate();
+
+            /*
+            //Oauth2 google authorization service
+            services.AddAuthentication()
+                .AddGoogle(googleOptions =>
+                {
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+                    googleOptions.ClientId = googleAuthNSection["ClientId"];
+                    googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+                });
+                //.AddFacebook(facebookOptions => { });
+            */
 
             /*
             services.Configure<IISServerOptions>(options =>
