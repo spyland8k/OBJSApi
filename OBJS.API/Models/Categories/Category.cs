@@ -1,4 +1,5 @@
-﻿using OBJS.API.Models.Advertises;
+﻿using Newtonsoft.Json;
+using OBJS.API.Models.Advertises;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,6 +27,7 @@ namespace OBJS.API.Models.Categories
         public int? ParentID { get; set; }
         
         //-----FK-----
+        [JsonIgnore]
         public Category Parent { get; set; }
 
         public ICollection<Category> Child { get; set; }
@@ -34,6 +36,7 @@ namespace OBJS.API.Models.Categories
         //public ICollection<Category> SubCategories { get; set; }
 
         // subcategory has many products, N-N
+        [JsonIgnore]
         public virtual ICollection<Advertise> Advertises { get; set; }
 
     }

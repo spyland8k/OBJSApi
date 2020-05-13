@@ -25,12 +25,21 @@ namespace OBJS.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
+            
+            if (categories == null)
+            {
+                return NotFound("Sistemde kategori bulunmamaktadır.");
+            }
+
+            return categories;
         }
 
+
+        // responses, requested category has a main category send it back with parents
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
 
@@ -39,7 +48,21 @@ namespace OBJS.API.Controllers
                 return NotFound();
             }
 
-            return category;
+            List<Category> categories = new List<Category>();
+            categories.Add(category);
+
+            //that category has a main category, check for parents
+            while (category.ParentID != null)
+            {
+                //get parent category
+                var maincategory = await _context.Categories.FindAsync(category.ParentID);
+                //add to the list parent category
+                categories.Add(maincategory);
+                //after added swap their positions, for check parentId of parent
+                category = maincategory;
+            }
+
+            return categories;
         }
     }
 }

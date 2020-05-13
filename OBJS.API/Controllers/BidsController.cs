@@ -24,7 +24,7 @@ namespace OBJS.API.Controllers
 
         //returns advertises 5 of had all bids
         // GET: api/Advertises/5/Bids
-        [HttpGet("Advertises/{id:int}/Bids")]
+        [HttpGet("Advertises/{id:int}/Bids", Name = "GetBidtoAdvertisebyId")]
         public async Task<ActionResult<IEnumerable<Bid>>> GetBids(int id)
         {
             var bids = await _context.Bids.ToListAsync();
@@ -40,7 +40,6 @@ namespace OBJS.API.Controllers
 
             return advertisebids;
         }
-
      
         /*// PUT: api/Bids/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -78,19 +77,18 @@ namespace OBJS.API.Controllers
         // POST: api/Advertise/5/Bids
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("Advertises/{id:int}/Bids", Name = "PostAdvertiseBidbyId")]
+        [HttpPost("Advertises/{id:int}/Bids", Name = "PostBidtoAdvertisebyId")]
         public async Task<ActionResult<Bid>> PostBid(int id, Bid bid)
         {
             if(bid == null)
             {
-                return BadRequest("İlan veya Teklif içeriği boş olamaz");
+                return BadRequest("Teklif içeriği boş olamaz");
             }
 
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBid", new { id = bid.BidId }, bid);
         }
-
 
         /*// DELETE: api/Bids/5
         [HttpDelete("{id}")]
@@ -107,6 +105,7 @@ namespace OBJS.API.Controllers
 
             return bid;
         }*/
+
         private bool BidExists(int id)
         {
             return _context.Bids.Any(e => e.BidId == id);
