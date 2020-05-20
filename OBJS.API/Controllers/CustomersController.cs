@@ -145,9 +145,6 @@ namespace OBJS.API.Controllers
             }
 
             _context.Customers.Add(customer);
-
-            //AssingCustomerId(customer);
-
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);

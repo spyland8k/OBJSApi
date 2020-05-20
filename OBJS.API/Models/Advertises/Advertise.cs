@@ -29,7 +29,7 @@ namespace OBJS.API.Models.Advertises
 
 
         // 1-1
-        // Advertise state; waiting, continue, finished
+        // Advertise state; waiting(1), continue(2), finished(3)
         public int AdvertiseStateId { get; set; }
         [JsonIgnore]
         public AdvertiseState Advertisestate { get; set; }

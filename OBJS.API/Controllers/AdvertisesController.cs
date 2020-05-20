@@ -92,7 +92,7 @@ namespace OBJS.API.Controllers
 
             if (id != advertise.AdvertiseId)
             {
-                return BadRequest("Sistemde bu ilan bulunmamaktadır");
+                return NotFound("Sistemde bu ilan bulunmamaktadır");
             }
 
             _context.Entry(advertise).State = EntityState.Modified;
@@ -121,6 +121,11 @@ namespace OBJS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Advertise>> PostAdvertise(Advertise advertise)
         {
+            if (advertise == null)
+            {
+                return BadRequest("Gönderilen içerik boş olamaz");
+            }
+
             _context.Advertises.Add(advertise);
             await _context.SaveChangesAsync();
 
@@ -129,7 +134,7 @@ namespace OBJS.API.Controllers
 
         // inserting to the db all of coming data from client about advertise details.
         // POST: api/Advertises/5/Details
-        [HttpPost("Advertises/{id:int}/Details", Name = "PostAdvertiseDetailbyId")]
+        [HttpPost("{id:int}/Details", Name = "PostAdvertiseDetailbyId")]
         public async Task<ActionResult<Advertise>> PostAdvertiseDetailbyId(int id, Advertise advertise)
         {
             if(advertise == null)
@@ -146,7 +151,7 @@ namespace OBJS.API.Controllers
 
             if(c == null)
             {
-                return BadRequest("İlan bulunmamaktadır");
+                return NotFound("İlan bulunmamaktadır");
             }
 
             var advertiseDetail = new AdvertiseDetail();
