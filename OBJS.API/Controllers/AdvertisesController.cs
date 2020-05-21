@@ -87,7 +87,7 @@ namespace OBJS.API.Controllers
         {
             if ( advertise == null)
             {
-                return BadRequest("Gönderilen içerik boş olamaz");
+                return BadRequest("İstek içeriği boş olamaz");
             }
 
             if (id != advertise.AdvertiseId)
@@ -123,7 +123,7 @@ namespace OBJS.API.Controllers
         {
             if (advertise == null)
             {
-                return BadRequest("Gönderilen içerik boş olamaz");
+                return BadRequest("İstek içeriği boş olamaz");
             }
 
             _context.Advertises.Add(advertise);
@@ -139,7 +139,7 @@ namespace OBJS.API.Controllers
         {
             if(advertise == null)
             {
-                return BadRequest("İçerik boş olamaz");
+                return BadRequest("İstek içeriği boş olamaz");
             }
 
             var c = await _context.Advertises.FindAsync(id);
