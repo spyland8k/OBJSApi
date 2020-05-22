@@ -24,8 +24,9 @@ namespace OBJS.API.Controllers
         // ASP.NET Core will automatically bind form values, route values and query strings by name
         // GET: api/Advertises
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises()
+        public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises([FromQuery] DateTime? startdate, [FromQuery] DateTime? enddate)
         {
+            //return Ok(startdate.ToShortDateString() + " " + enddate.ToShortDateString() + " " + test);
             var advertises = await _context.Advertises.ToListAsync();
 
             if (advertises == null)
@@ -33,11 +34,28 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde kayıtlı ilan bulunmuyor");
             }
 
-            foreach (var advertise in advertises)
+            if (startdate != null || enddate != null)
             {
-                var advertisedetail = await _context.AdvertiseDetails
+                
+                foreach (var advertise in advertises)
+                {
+                    if ((advertise.Startdate >= startdate && advertise.EndDate <= enddate) ||
+                        (advertise.Startdate >= startdate) || (advertise.EndDate <= enddate))
+                    {
+                        var advertisedetail = await _context.AdvertiseDetails
+                        .Include(d => d.Advertise)
+                        .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var advertise in advertises)
+                {
+                    var advertisedetail = await _context.AdvertiseDetails
                     .Include(d => d.Advertise)
                     .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
+                }
             }
 
             return advertises;
@@ -87,12 +105,12 @@ namespace OBJS.API.Controllers
         {
             if ( advertise == null)
             {
-                return BadRequest("Gönderilen içerik boş olamaz");
+                return BadRequest("İstek içeriği boş olamaz");
             }
 
             if (id != advertise.AdvertiseId)
             {
-                return BadRequest("Sistemde bu ilan bulunmamaktadır");
+                return NotFound("Sistemde bu ilan bulunmamaktadır");
             }
 
             _context.Entry(advertise).State = EntityState.Modified;
@@ -121,6 +139,11 @@ namespace OBJS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Advertise>> PostAdvertise(Advertise advertise)
         {
+            if (advertise == null)
+            {
+                return BadRequest("İstek içeriği boş olamaz");
+            }
+
             _context.Advertises.Add(advertise);
             await _context.SaveChangesAsync();
 
@@ -129,24 +152,24 @@ namespace OBJS.API.Controllers
 
         // inserting to the db all of coming data from client about advertise details.
         // POST: api/Advertises/5/Details
-        [HttpPost("Advertises/{id:int}/Details", Name = "PostAdvertiseDetailbyId")]
+        [HttpPost("{id:int}/Details", Name = "PostAdvertiseDetailbyId")]
         public async Task<ActionResult<Advertise>> PostAdvertiseDetailbyId(int id, Advertise advertise)
         {
             if(advertise == null)
             {
-                return BadRequest("İçerik boş olamaz");
+                return BadRequest("İstek içeriği boş olamaz");
             }
 
             var c = await _context.Advertises.FindAsync(id);
 
-            if(id != advertise.AdvertiseId)
+            if(id != advertise.CustomerId)
             {
                 return BadRequest("İlana erişim yetkisi bulunmuyor");
             }
 
             if(c == null)
             {
-                return BadRequest("İlan bulunmamaktadır");
+                return NotFound("İlan bulunmamaktadır");
             }
 
             var advertiseDetail = new AdvertiseDetail();

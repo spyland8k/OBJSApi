@@ -20,17 +20,18 @@ namespace OBJS.API.Models.Advertises
         public bool IsActive { get; set; } = true;
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy hh-mm-ss}", ApplyFormatInEditMode = true)]
         public DateTime Startdate { get; set; }
+        //<td style="text-align:left;">@Html.DisplayFor(modelItem => item.SignDate)</td>
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy hh-mm-ss}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
 
         // 1-1
-        // Advertise state; waiting, continue, finished
-        public int AdvertiseStateId { get; set; }
+        // Advertise state; default value: waiting(1), continue(2), finished(3)
+        public int AdvertiseStateId { get; set; } = 1;
         [JsonIgnore]
         public AdvertiseState Advertisestate { get; set; }
 
