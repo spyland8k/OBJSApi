@@ -24,8 +24,9 @@ namespace OBJS.API.Controllers
         // ASP.NET Core will automatically bind form values, route values and query strings by name
         // GET: api/Advertises
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises()
+        public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises([FromQuery] DateTime? startdate, [FromQuery] DateTime? enddate)
         {
+            //return Ok(startdate.ToShortDateString() + " " + enddate.ToShortDateString() + " " + test);
             var advertises = await _context.Advertises.ToListAsync();
 
             if (advertises == null)
@@ -33,11 +34,28 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde kayıtlı ilan bulunmuyor");
             }
 
-            foreach (var advertise in advertises)
+            if (startdate != null || enddate != null)
             {
-                var advertisedetail = await _context.AdvertiseDetails
+                
+                foreach (var advertise in advertises)
+                {
+                    if ((advertise.Startdate >= startdate && advertise.EndDate <= enddate) ||
+                        (advertise.Startdate >= startdate) || (advertise.EndDate <= enddate))
+                    {
+                        var advertisedetail = await _context.AdvertiseDetails
+                        .Include(d => d.Advertise)
+                        .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var advertise in advertises)
+                {
+                    var advertisedetail = await _context.AdvertiseDetails
                     .Include(d => d.Advertise)
                     .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
+                }
             }
 
             return advertises;
@@ -144,7 +162,7 @@ namespace OBJS.API.Controllers
 
             var c = await _context.Advertises.FindAsync(id);
 
-            if(id != advertise.AdvertiseId)
+            if(id != advertise.CustomerId)
             {
                 return BadRequest("İlana erişim yetkisi bulunmuyor");
             }

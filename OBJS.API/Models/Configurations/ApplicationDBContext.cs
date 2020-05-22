@@ -9,7 +9,6 @@ namespace OBJS.API.Models
 {
     public class ApplicationDBContext : DbContext
     {
-        //options: "ConnectionString:DefaultConnection"
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
             
@@ -83,14 +82,6 @@ namespace OBJS.API.Models
                     .HasForeignKey(c => c.CustomerId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
-            
-            /*modelBuilder.Entity<Customer>(entity =>
-            {
-                entity.HasKey(k => k.CustomerId);
-                entity.HasKey(k => k.Username);
-                entity.HasKey(k => k.Email);
-            });*/
-
             //Entity seeding data initializer
             modelBuilder.Entity<AdvertiseState>(entity =>
             {

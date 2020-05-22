@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,14 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OBJS.API.Mapping;
 using OBJS.API.Models;
 using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Options;
 
 namespace OBJS.API
 {
@@ -40,29 +32,10 @@ namespace OBJS.API
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            
+
             // Get the database context and apply the migrations (azure database automatic migrations EF Codefirst)
             var context = services.BuildServiceProvider().GetService<ApplicationDBContext>();
             context.Database.Migrate();
-
-            /*
-            //Oauth2 google authorization service
-            services.AddAuthentication()
-                .AddGoogle(googleOptions =>
-                {
-                    IConfigurationSection googleAuthNSection =
-                        Configuration.GetSection("Authentication:Google");
-                    googleOptions.ClientId = googleAuthNSection["ClientId"];
-                    googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-                });
-                //.AddFacebook(facebookOptions => { });
-            */
-
-            /*
-            services.Configure<IISServerOptions>(options =>
-            {
-                options.AutomaticAuthentication = false;
-            });*/
 
             //This is a new feature in ASP.NET Core 2.2:
             //An IActionResult returning a client error status code(4xx) now returns a ProblemDetails body.
@@ -73,11 +46,13 @@ namespace OBJS.API
                     options.SuppressModelStateInvalidFilter = true;
                 });
 
-
             // Another using [JsonIgnore]; need to add the attribute to all the models, we may have the cyclic reference.
-            services.AddControllers().AddNewtonsoftJson(options =>
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
+                )
+                .AddNewtonsoftJson(options =>
+                options.SerializerSettings.DateFormatString = "dd-MM-yyyy hh-mm-ss"); // hh= hours, mm= minutes, ss= seconds.
 
             services.AddControllers();
         }

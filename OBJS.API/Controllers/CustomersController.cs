@@ -59,6 +59,21 @@ namespace OBJS.API.Controllers
             return customer;
         }
 
+        // GET: api/Customers/byId?id=5
+        [HttpGet("byId")]
+        public async Task<ActionResult<Customer>> Get(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound(id + " numaraya sahip kullanıcı yoktur.");
+            }
+
+            return customer;
+        }
+
+
         /* @param int $id
         * Parametre'den gelen $id ile CustomerDetail'daki $CustomerId(FK) değerini arayıp eşleşen, Customer'ın tüm bilgileri getirir.
         */
@@ -87,6 +102,7 @@ namespace OBJS.API.Controllers
             return Ok(customer);
         }
 
+        //change customer information and details
         // PUT: api/Customers/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
@@ -122,9 +138,6 @@ namespace OBJS.API.Controllers
 
             return Content(id + " numaralı kullanıcının bilgileri güncellendi.");
         }
-
-        // PUT: api/Customers/5/details
-        //----------
 
         // POST: api/Customers
         [HttpPost]
