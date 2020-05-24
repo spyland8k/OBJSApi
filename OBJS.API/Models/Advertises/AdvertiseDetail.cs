@@ -15,7 +15,6 @@ namespace OBJS.API.Models.Advertises
         public string ImagePath { get; set; }
 
 
-
         public int AdvertiseId { get; set; }
         public Advertise Advertise { get; set; }
     }

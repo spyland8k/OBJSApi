@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using OBJS.API.Models.Customers;
 using OBJS.API.Models.Advertises;
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace OBJS.API.Models.Transactions
 {
@@ -23,11 +23,15 @@ namespace OBJS.API.Models.Transactions
         //FK; One Advertisement has a many Bid // Cascade delete
         //[ForeignKey("Advertise")]
         public int AdvertiseId { get; set; }
+
+        [JsonIgnore]
         public virtual Advertise Advertise { get; set; }
 
         //FK; One bid has a one Supplier // No-Cascade delete
         //[ForeignKey("Customer")]
         public int CustomerId { get; set; }
+
+        [JsonIgnore]
         public virtual Customer Customer { get; set; }
 
         //public ICollection<Bid> Bids { get; set; }

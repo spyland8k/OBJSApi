@@ -21,7 +21,6 @@ namespace OBJS.API.Models.Customers
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
 
-        //Geri döndürülen cevap json verisini gizler
         [JsonIgnore]
         public Customer Customer { get; set; }
     }

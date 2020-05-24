@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OBJS.API.Models;
@@ -27,36 +26,16 @@ namespace OBJS.API.Controllers
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises([FromQuery] DateTime? startdate, [FromQuery] DateTime? enddate)
         {
             //return Ok(startdate.ToShortDateString() + " " + enddate.ToShortDateString() + " " + test);
-            var advertises = await _context.Advertises.ToListAsync();
+            var advertises = await _context.Advertises
+                .Where(a => a.Startdate >= startdate && a.Startdate <= enddate).ToListAsync();
 
             if (advertises == null)
             {
                 return NotFound("Sistemde kayıtlı ilan bulunmuyor");
             }
 
-            if (startdate != null || enddate != null)
-            {
-                
-                foreach (var advertise in advertises)
-                {
-                    if ((advertise.Startdate >= startdate && advertise.EndDate <= enddate) ||
-                        (advertise.Startdate >= startdate) || (advertise.EndDate <= enddate))
-                    {
-                        var advertisedetail = await _context.AdvertiseDetails
-                        .Include(d => d.Advertise)
-                        .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var advertise in advertises)
-                {
-                    var advertisedetail = await _context.AdvertiseDetails
-                    .Include(d => d.Advertise)
-                    .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
-                }
-            }
+            await _context.Advertises
+                .Include(k => k.AdvertiseDetails).ToListAsync();
 
             return advertises;
         }
@@ -72,38 +51,29 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde " + id + "'ye sahip ilan bulunmuyor");
             }
 
-            var advertisedetail = await _context.AdvertiseDetails
-                    .Include(d => d.Advertise)
-                    .FirstOrDefaultAsync(a => a.AdvertiseId == advertise.AdvertiseId);
+            await _context.AdvertiseDetails
+                .Where(a => a.AdvertiseId == advertise.AdvertiseId).ToListAsync();
 
             return advertise;
         }
 
         // GET: api/Advertises/Categories/5
-        /* Filter categories by categoryId 
+        /* Filter advertises category by categoryId 
          */
         [HttpGet("Categories/{id:int}")]
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertiseByCategoryId(int id)
         {
-            var advertises = await _context.Advertises.ToListAsync();
-            List<Advertise> categoryadvertises = new List<Advertise>();
+            var advertises = await _context.Advertises
+                .Where(a => a.CategoryId == id).ToListAsync();
 
-            foreach (var advertise in advertises)
-            {
-                if(advertise.CategoryId == id)
-                {
-                    categoryadvertises.Add(advertise);
-                }
-            }
-
-            return categoryadvertises;
+            return advertises;
         }
 
         // PUT: api/Advertises/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAdvertise(int id, Advertise advertise)
         {
-            if ( advertise == null)
+            if (advertise == null)
             {
                 return BadRequest("İstek içeriği boş olamaz");
             }
@@ -155,28 +125,30 @@ namespace OBJS.API.Controllers
         [HttpPost("{id:int}/Details", Name = "PostAdvertiseDetailbyId")]
         public async Task<ActionResult<Advertise>> PostAdvertiseDetailbyId(int id, Advertise advertise)
         {
-            if(advertise == null)
+            if (advertise == null)
             {
                 return BadRequest("İstek içeriği boş olamaz");
             }
 
             var c = await _context.Advertises.FindAsync(id);
 
-            if(id != advertise.CustomerId)
-            {
-                return BadRequest("İlana erişim yetkisi bulunmuyor");
-            }
-
-            if(c == null)
+            if (c == null)
             {
                 return NotFound("İlan bulunmamaktadır");
             }
 
             var advertiseDetail = new AdvertiseDetail();
             advertiseDetail.AdvertiseId = advertise.AdvertiseId;
-            advertiseDetail.Title = advertise.AdvertiseDetails.FirstOrDefault().Title;
-            advertiseDetail.Description = advertise.AdvertiseDetails.FirstOrDefault().Description;
-            advertiseDetail.ImagePath = advertise.AdvertiseDetails.FirstOrDefault().ImagePath;
+
+            advertiseDetail.Title = advertise.AdvertiseDetails
+                .Where(t => t.AdvertiseId == id).FirstOrDefault().Title;
+
+            advertiseDetail.Description = advertise.AdvertiseDetails
+                .Where(t => t.AdvertiseId == id).FirstOrDefault().Description;
+
+            advertiseDetail.ImagePath = advertise.AdvertiseDetails
+                .Where(t => t.AdvertiseId == id).FirstOrDefault().ImagePath;
+
 
             _context.AdvertiseDetails.Add(advertiseDetail);
 
