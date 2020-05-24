@@ -8,11 +8,6 @@ namespace OBJS.API.Models.Categories
 {
     public class Category
     {
-        public Category()
-        {
-            //SubCategories = new HashSet<Category>();
-        }
-
         [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CategoryId { get; set; }

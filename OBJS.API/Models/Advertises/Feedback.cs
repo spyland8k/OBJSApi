@@ -7,11 +7,6 @@ namespace OBJS.API.Models.Advertises
 {
     public class Feedback
     {
-        public Feedback()
-        {
-
-        }
-
         [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdvertisefeedbackId { get; set; }

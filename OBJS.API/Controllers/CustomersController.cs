@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using OBJS.API.Models;
 using OBJS.API.Models.Customers;
+using OBJS.API.Models.Transactions;
 
 namespace OBJS.API.Controllers
 {
@@ -34,19 +32,16 @@ namespace OBJS.API.Controllers
             */
             var customers = await _context.Customers.ToListAsync();
 
-
-            foreach (var customer in customers)
-            {
-                var customerdetail = await _context.CustomerDetails
-                    .Include(d => d.Customer)
-                    .FirstOrDefaultAsync(a => a.CustomerId == customer.CustomerId);
-            }
+            await _context.Customers
+                .Include(k => k.CustomerDetails)
+                .Include(k => k.Advertises)
+                .Include(k => k.Bids).ToListAsync();
 
             return customers;
         }
 
         // GET: api/Customers/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
@@ -56,30 +51,20 @@ namespace OBJS.API.Controllers
                 return NotFound(id + " numaraya sahip kullanıcı yoktur.");
             }
 
-            return customer;
-        }
-
-        // GET: api/Customers/byId?id=5
-        [HttpGet("byId")]
-        public async Task<ActionResult<Customer>> Get(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-
-            if (customer == null)
-            {
-                return NotFound(id + " numaraya sahip kullanıcı yoktur.");
-            }
+            await _context.Customers
+                .Include(k => k.CustomerDetails)
+                .Include(k => k.Advertises)
+                .Include(k => k.Bids).ToListAsync();
 
             return customer;
         }
-
 
         /* @param int $id
         * Parametre'den gelen $id ile CustomerDetail'daki $CustomerId(FK) değerini arayıp eşleşen, Customer'ın tüm bilgileri getirir.
         */
         // GET: api/Customer/5/Details
-        [HttpGet("{id:int}/details", Name = "GetCustomerDetailbyId")]
-        public async Task<ActionResult> GetCustomerDetailbyId(int id)
+        [HttpGet("{id:int}/Details", Name = "GetCustomerDetailbyId")]
+        public async Task<ActionResult<Customer>> GetCustomerDetailbyId(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
 
@@ -88,18 +73,58 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
             }
 
-            var customerdetail = await _context.CustomerDetails.AsNoTracking()
-                .Include(p => p.Customer)
-                .FirstOrDefaultAsync(c => c.CustomerId == id);
+            var customerdetail = await _context.CustomerDetails
+                .Where(a => a.CustomerId == id).ToListAsync();
 
-            if(customerdetail == null)
+            if (customerdetail == null)
             {
                 return NotFound(id + " numaralı kullanıcının detaylı bilgisi yoktur.");
             }
 
-            customer.CustomerDetails.Add(customerdetail);
+            return customer;
+        }
+
+        // GET: api/Customer/5/Bids
+        [HttpGet("{id:int}/Bids", Name = "GetCustomerBidsById")]
+        public async Task<ActionResult> GetCustomerBidsbyId(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
+            }
+
+            await _context.Bids
+                .Where(a => a.CustomerId == id).ToListAsync();
 
             return Ok(customer);
+        }
+
+        // GET: api/Customer/5/Feedbacks
+        [HttpGet("{id:int}/Feedbacks", Name = "GetCustomerFeedbackbyId")]
+        public async Task<ActionResult<Customer>> GetCustomerFeedbackbyId(int id)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+
+            if (customer == null)
+            {
+                return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
+            }
+
+            
+            var customerFromFeedbacks = await _context.Feedbacks
+                .Where(a => a.OwnerID == id).ToListAsync();
+
+            var customerToFeedbacks = await _context.Feedbacks
+                .Where(a => a.BidderID == id).ToListAsync();
+
+            if(customerFromFeedbacks == null && customerToFeedbacks == null)
+            {
+                return NotFound(id + " kullanıcının geri bildirimi yoktur");
+            }
+
+            return customer;
         }
 
         //change customer information and details
@@ -107,7 +132,6 @@ namespace OBJS.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
-
             if (customer == null)
             {
                 return BadRequest("Gönderilen içerik boş olamaz");
@@ -165,7 +189,7 @@ namespace OBJS.API.Controllers
 
         // Post: api/Customers/5/Details
         [HttpPost("{id:int}/Details", Name = "PostCustomerDetailbyId")]
-        public async Task<ActionResult> PostCustomerDetailbyId(int id, Customer customer)
+        public async Task<ActionResult<CustomerDetail>> PostCustomerDetailbyId(int id, Customer customer)
         {
             if (customer == null)
             {
@@ -196,9 +220,8 @@ namespace OBJS.API.Controllers
             //Save asyncronized changes on dbcontext
             await _context.SaveChangesAsync();
 
-            return Content("Kullanıcı detayı eklendi!");
+            return (customerDetail);
         }
-
 
         //Send customer to the method, it checks if user is in the system
         private int CustomerValidation(Customer customer)

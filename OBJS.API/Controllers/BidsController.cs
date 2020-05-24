@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ using OBJS.API.Models.Transactions;
 
 namespace OBJS.API.Controllers
 {
-    [Route("api/advertises")]
+    [Route("api/")]
     [ApiController]
     public class BidsController : ControllerBase
     {
@@ -24,7 +25,7 @@ namespace OBJS.API.Controllers
 
         //returns advertises 5 of had all bids
         // GET: api/Advertises/5/Bids
-        [HttpGet("{id:int}/Bids", Name = "GetBidtoAdvertisebyId")]
+        [HttpGet("Advertises/{id:int}/Bids", Name = "GetBidtoAdvertisebyId")]
         public async Task<ActionResult<IEnumerable<Bid>>> GetBids(int id)
         {
             var bids = await _context.Bids.ToListAsync();
@@ -40,75 +41,44 @@ namespace OBJS.API.Controllers
 
             return advertisebids;
         }
-     
-        /*// PUT: api/Bids/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBid(int id, Bid bid)
-        {
-            if (id != bid.BidId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(bid).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BidExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-        */
-
+        //@Param= id: advertiseId, bid: bid details for advertise
         // POST: api/Advertise/5/Bids
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost("{id:int}/Bids", Name = "PostBidtoAdvertisebyId")]
+
+        [HttpPost("Advertises/{id:int}/Bids", Name = "PostBidtoAdvertisebyId")]
         public async Task<ActionResult<Bid>> PostBid(int id, Bid bid)
         {
-            if(bid == null)
-            {
-                return BadRequest("Teklif içeriği boş olamaz");
-            }
-
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBid", new { id = bid.BidId }, bid);
-        }
-
-        /*// DELETE: api/Bids/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Bid>> DeleteBid(int id)
-        {
-            var bid = await _context.Bids.FindAsync(id);
             if (bid == null)
             {
-                return NotFound();
+                return BadRequest("İçerik boş olamaz.");
             }
 
-            _context.Bids.Remove(bid);
+            var advertise = await _context.Advertises.FindAsync(id);
+
+            if (id != bid.AdvertiseId)
+            {
+                return BadRequest("Yetkisiz ilan teklifi");
+            }
+
+            if (advertise == null)
+            {
+                return BadRequest("İlan bulunamadı.");
+            }
+
+            //Recieving JSON data, filling customerdetails table.
+            var advertiseBid = new Bid();
+            advertiseBid.AdvertiseId = advertise.AdvertiseId;
+            advertiseBid.Price = bid.Price;
+            advertiseBid.Duration = bid.Duration;
+            advertiseBid.CustomerId = bid.CustomerId;
+
+            _context.Bids.Add(advertiseBid);
+
+            //Save asyncronized changes on dbcontext
             await _context.SaveChangesAsync();
 
-            return bid;
-        }*/
-
-        private bool BidExists(int id)
-        {
-            return _context.Bids.Any(e => e.BidId == id);
+            return advertiseBid;
         }
     }
 }
