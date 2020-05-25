@@ -6,8 +6,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OBJS.API.Models.Categories
 {
-    public class Category
+    public partial class Category
     {
+        public Category()
+        {
+            this.SubCategory = new HashSet<Category>();
+        }
+
         [Key, Column(Order = 1)]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CategoryId { get; set; }
@@ -20,19 +25,14 @@ namespace OBJS.API.Models.Categories
 
         //ParentId is nullable, because top-level categories have no parent.
         public int? ParentID { get; set; }
+
+        //Navigation properties are virtual
+        [ForeignKey("ParentID")]
+        public virtual Category ParentCategory { get; set; }
         
-        //-----FK-----
-        [JsonIgnore]
-        public Category Parent { get; set; }
+        public virtual ICollection<Category> SubCategory { get; set; }
 
-        public ICollection<Category> Child { get; set; }
-
-        //Virtual used to manage lazy loading and change tracking
-        //public ICollection<Category> SubCategories { get; set; }
-
-        // subcategory has many products, N-N
         [JsonIgnore]
         public virtual ICollection<Advertise> Advertises { get; set; }
-
     }
 }

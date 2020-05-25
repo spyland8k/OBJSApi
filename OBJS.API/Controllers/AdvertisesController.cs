@@ -26,9 +26,25 @@ namespace OBJS.API.Controllers
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertises([FromQuery] DateTime? startdate, [FromQuery] DateTime? enddate)
         {
             //return Ok(startdate.ToShortDateString() + " " + enddate.ToShortDateString() + " " + test);
-            var advertises = await _context.Advertises
-                .Where(a => a.Startdate >= startdate && a.Startdate <= enddate).ToListAsync();
+            List<Advertise> advertises;
 
+            if (startdate != null && enddate == null)
+            {
+                advertises = await _context.Advertises
+                    .Where(a => a.Startdate >= startdate).ToListAsync();
+            }else if (startdate == null && enddate != null)
+            {
+                advertises = await _context.Advertises
+                    .Where(a => a.EndDate <= enddate).ToListAsync();
+            }else if(startdate != null && enddate != null)
+            {
+                advertises = await _context.Advertises
+                    .Where(a => a.Startdate >= startdate && a.EndDate <= enddate).ToListAsync();
+            }else
+            {
+                advertises = await _context.Advertises.ToListAsync();
+            }
+            
             if (advertises == null)
             {
                 return NotFound("Sistemde kayıtlı ilan bulunmuyor");
@@ -64,7 +80,9 @@ namespace OBJS.API.Controllers
         public async Task<ActionResult<IEnumerable<Advertise>>> GetAdvertiseByCategoryId(int id)
         {
             var advertises = await _context.Advertises
-                .Where(a => a.CategoryId == id).ToListAsync();
+                .Where(a => a.CategoryId == id)
+                .Include(k => k.AdvertiseDetails).ToListAsync();
+
 
             return advertises;
         }
@@ -130,31 +148,74 @@ namespace OBJS.API.Controllers
                 return BadRequest("İstek içeriği boş olamaz");
             }
 
-            var c = await _context.Advertises.FindAsync(id);
+            var adv = await _context.Advertises.FindAsync(id);
 
-            if (c == null)
+            if (adv == null)
             {
                 return NotFound("İlan bulunmamaktadır");
+            }
+
+            if(adv.AdvertiseId != id)
+            {
+                //parametre'den ve gönderilen içerikteki advertiseId'ler eşleşmiyor
+                return BadRequest("İlana erişim yetkisi bulunmuyor");
             }
 
             var advertiseDetail = new AdvertiseDetail();
             advertiseDetail.AdvertiseId = advertise.AdvertiseId;
 
-            advertiseDetail.Title = advertise.AdvertiseDetails
-                .Where(t => t.AdvertiseId == id).FirstOrDefault().Title;
+            advertiseDetail.Title = advertise.AdvertiseDetails.FirstOrDefault().Title;
 
-            advertiseDetail.Description = advertise.AdvertiseDetails
-                .Where(t => t.AdvertiseId == id).FirstOrDefault().Description;
+            advertiseDetail.Description = advertise.AdvertiseDetails.FirstOrDefault().Description;
 
-            advertiseDetail.ImagePath = advertise.AdvertiseDetails
-                .Where(t => t.AdvertiseId == id).FirstOrDefault().ImagePath;
+            advertiseDetail.ImagePath = advertise.AdvertiseDetails.FirstOrDefault().ImagePath;
 
 
             _context.AdvertiseDetails.Add(advertiseDetail);
 
             await _context.SaveChangesAsync();
 
-            return Ok("İlan detayı eklendi!");
+            return Ok("İlan oluşturuldu/güncellendi");
+        }
+
+        // POST: api/Advertises/5/Feedbacks
+        [HttpPost("{id:int}/Feedbacks", Name = "PostAdvertiseFeedbackbyId")]
+        public async Task<ActionResult<Feedback>> PostAdvertiseFeedbackbyId(int id, Feedback feedback)
+        {
+            if (feedback == null)
+            {
+                return BadRequest("İstek içeriği boş olamaz");
+            }
+
+            var advertise = await _context.Advertises.FindAsync(id);
+
+            await _context.Advertises
+                .Include(k => k.Advertisestate).ToListAsync();
+
+            if (advertise == null)
+            {
+                return NotFound("İlan bulunmamaktadır");
+            }
+
+            if(advertise.IsActive == false)
+            {
+                return NotFound("İlan aktif değildir, yorum yapılamaz");
+            }
+            
+            //İlan başarıyla tamamlandıktan sonra işi veren ve işi yapan kişiler birbirlerine geri bildirim(yorum) gönderebilir.
+            if (advertise.Advertisestate.IsStarted == true || advertise.Advertisestate.IsContinue == true)
+            {
+                return NotFound("İlan, ilanı oluşturan kişi tarafından onaylanmadan yorum yapılamaz");
+            }
+
+            feedback.AdvertiseId = advertise.AdvertiseId;
+            feedback.OwnerID = advertise.CustomerId;
+
+            _context.Feedbacks.Add(feedback);
+
+            await _context.SaveChangesAsync();
+
+            return feedback;
         }
 
         private bool AdvertiseExists(int id)

@@ -92,6 +92,10 @@
     <Compile Remove="Migrations\20200521185635_test.Designer.cs" />
     <Compile Remove="Migrations\20200522125009_initial.cs" />
     <Compile Remove="Migrations\20200522125009_initial.Designer.cs" />
+    <Compile Remove="Migrations\20200525184022_category-property.cs" />
+    <Compile Remove="Migrations\20200525184022_category-property.Designer.cs" />
+    <Compile Remove="Migrations\20200525185024_category-property.cs" />
+    <Compile Remove="Migrations\20200525185024_category-property.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

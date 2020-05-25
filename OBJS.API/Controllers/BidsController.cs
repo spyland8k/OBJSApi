@@ -25,27 +25,18 @@ namespace OBJS.API.Controllers
 
         //returns advertises 5 of had all bids
         // GET: api/Advertises/5/Bids
-        [HttpGet("Advertises/{id:int}/Bids", Name = "GetBidtoAdvertisebyId")]
+        [HttpGet("Advertises/{id:int}/Bids", Name = "GetBidstoAdvertisebyId")]
         public async Task<ActionResult<IEnumerable<Bid>>> GetBids(int id)
         {
-            var bids = await _context.Bids.ToListAsync();
-            List<Bid> advertisebids = new List<Bid>();
-
-            foreach (var bid in bids)
-            {
-                if(bid.AdvertiseId == id)
-                {
-                    advertisebids.Add(bid);
-                }
-            }
+            var advertisebids = await _context.Bids
+                .Where(a => a.AdvertiseId == id).ToListAsync();
 
             return advertisebids;
         }
 
 
         //@Param= id: advertiseId, bid: bid details for advertise
-        // POST: api/Advertise/5/Bids
-
+        // POST: api/Advertises/5/Bids
         [HttpPost("Advertises/{id:int}/Bids", Name = "PostBidtoAdvertisebyId")]
         public async Task<ActionResult<Bid>> PostBid(int id, Bid bid)
         {
@@ -55,11 +46,6 @@ namespace OBJS.API.Controllers
             }
 
             var advertise = await _context.Advertises.FindAsync(id);
-
-            if (id != bid.AdvertiseId)
-            {
-                return BadRequest("Yetkisiz ilan teklifi");
-            }
 
             if (advertise == null)
             {

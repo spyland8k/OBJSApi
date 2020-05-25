@@ -25,7 +25,9 @@ namespace OBJS.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _context.Categories
+                .Include(x => x.SubCategory)
+                .ThenInclude(x => x.SubCategory).ToListAsync();
             
             if (categories == null)
             {
@@ -41,28 +43,19 @@ namespace OBJS.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.Categories
+                .Where(k => k.CategoryId == id)
+                .Include(x => x.SubCategory)
+                .ThenInclude(x => x.SubCategory).ToListAsync();
+
+
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            List<Category> categories = new List<Category>();
-            categories.Add(category);
-
-            //that category has a main category, check for parents
-            while (category.ParentID != null)
-            {
-                //get parent category
-                var maincategory = await _context.Categories.FindAsync(category.ParentID);
-                //add to the list parent category
-                categories.Add(maincategory);
-                //after added swap their positions, for check parentId of parent
-                category = maincategory;
-            }
-
-            return categories;
+            return category;
         }
     }
 }

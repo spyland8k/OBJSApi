@@ -34,8 +34,8 @@ namespace OBJS.API
 
 
             // Get the database context and apply the migrations (azure database automatic migrations EF Codefirst)
-            var context = services.BuildServiceProvider().GetService<ApplicationDBContext>();
-            context.Database.Migrate();
+            //var context = services.BuildServiceProvider().GetService<ApplicationDBContext>();
+            //context.Database.Migrate();
 
             //This is a new feature in ASP.NET Core 2.2:
             //An IActionResult returning a client error status code(4xx) now returns a ProblemDetails body.

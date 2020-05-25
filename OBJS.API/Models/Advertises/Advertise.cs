@@ -36,13 +36,11 @@ namespace OBJS.API.Models.Advertises
         public AdvertiseState Advertisestate { get; set; }
 
         // 1-1 
-        public virtual Feedback Feedback { get; set; }
-
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
 
         // N-N / one Advertise has a many AdvertiseDetail
-        public ICollection<AdvertiseDetail> AdvertiseDetails { get; set; }
+        public virtual ICollection<AdvertiseDetail> AdvertiseDetails { get; set; }
 
-        //
         public virtual ICollection<Bid> Bids { get; set; }
 
         public int CategoryId { get; set; }
