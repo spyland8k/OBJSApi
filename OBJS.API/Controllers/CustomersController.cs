@@ -21,21 +21,35 @@ namespace OBJS.API.Controllers
             _context = context;
         }
 
-        /* Get all customers registered on Database(context is contains datas); Select * from Customers
-         */
+        //Get all customers registered on Database(context is contains datas); Select * from Customers
         // GET: api/Customers
+        // GET: api/Customers?username={string}
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers([FromQuery] string? username)
         {
-            /*Verilerin gizliliği için, controller'da kullanılan her sınıf için DTO veya
-             * O sınıflardaki attribute'ların [JsonIgnore] ile tanımlanması gerekiyor.
-            */
-            var customers = await _context.Customers.ToListAsync();
+            List<Customer> customers;
+
+            if(username == null)
+            {
+                customers = await _context.Customers.ToListAsync();
+            }
+            else
+            {
+                customers = await _context.Customers
+                .Where(k => k.Username == username).ToListAsync();
+            }
 
             await _context.Customers
-                .Include(k => k.CustomerDetails)
-                .Include(k => k.Advertises)
-                .Include(k => k.Bids).ToListAsync();
+                    .Include(k => k.CustomerDetails)
+                    .Include(k => k.Advertises)
+                    .Include(k => k.Bids)
+                    .Include(k => k.FeedbackFrom)
+                    .Include(k => k.FeedbackTo).ToListAsync();
+
+            if (customers == null)
+            {
+                return NotFound("Username: " + username + "Sistemde kayıtlı değildir");
+            }
 
             return customers;
         }
@@ -54,7 +68,9 @@ namespace OBJS.API.Controllers
             await _context.Customers
                 .Include(k => k.CustomerDetails)
                 .Include(k => k.Advertises)
-                .Include(k => k.Bids).ToListAsync();
+                .Include(k => k.Bids)
+                .Include(k => k.FeedbackFrom)
+                .Include(k => k.FeedbackTo).ToListAsync();
 
             return customer;
         }
@@ -121,7 +137,7 @@ namespace OBJS.API.Controllers
 
             if(customerFromFeedbacks == null && customerToFeedbacks == null)
             {
-                return NotFound(id + " kullanıcının geri bildirimi yoktur");
+                return NotFound(id + " kullanıcının geri bildirimi/yapılmış yorumu yoktur");
             }
 
             return customer;

@@ -32,11 +32,6 @@ namespace OBJS.API.Models
             //Entity relations manipulation
             modelBuilder.Entity<Feedback>(entity =>
             {
-                entity.HasKey(k => k.AdvertisefeedbackId);
-
-                entity.Property(b => b.Star)
-                    .HasDefaultValue(5);
-
                 entity.HasOne(k => k.OwnerCustomer)
                     .WithMany(n => n.FeedbackFrom)
                     .HasForeignKey(c => c.OwnerID)
@@ -82,6 +77,7 @@ namespace OBJS.API.Models
                     .HasForeignKey(c => c.CustomerId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
+
             //Entity seeding data initializer
             modelBuilder.Entity<AdvertiseState>(entity =>
             {
