@@ -26,7 +26,7 @@ namespace OBJS.API.Models.Categories
         //ParentId is nullable, because top-level categories have no parent.
         public int? ParentID { get; set; }
 
-        //Navigation properties are virtual
+        //Navigation Properties, those are using for a nested queries and references
         [ForeignKey("ParentID")]
         public virtual Category ParentCategory { get; set; }
         

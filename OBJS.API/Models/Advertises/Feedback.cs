@@ -15,9 +15,8 @@ namespace OBJS.API.Models.Advertises
         public string Comment { get; set; }
         //integer 0-5
         public int Star { get; set; }
-
-
         public int AdvertiseId { get; set; }
+
 
         //Feedback FROM
         public int OwnerID { get; set; }
