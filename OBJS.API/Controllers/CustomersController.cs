@@ -179,7 +179,7 @@ namespace OBJS.API.Controllers
             }
 
             _context.Entry(customer).State = EntityState.Modified;
-
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -203,7 +203,7 @@ namespace OBJS.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
-            if(customer == null)
+            if (customer == null)
             {
                 return BadRequest("Gönderilen içerik boş olamaz");
             }
@@ -218,6 +218,7 @@ namespace OBJS.API.Controllers
             }
 
             _context.Customers.Add(customer);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
@@ -225,26 +226,25 @@ namespace OBJS.API.Controllers
 
         // Post: api/Customers/5/Details
         [HttpPost("{id:int}/Details", Name = "PostCustomerDetailbyId")]
-        public async Task<ActionResult<CustomerDetail>> PostCustomerDetailbyId(int id, Customer customer)
+        public async Task<ActionResult> PostCustomerDetailbyId(int id, Customer customer)
         {
-            if (customer == null)
+            if(customer == null)
             {
-                return BadRequest("İçerik boş olamaz.");
+                return BadRequest("Gönderilen İstek içeriği boş olamaz");
             }
 
             var c = await _context.Customers.FindAsync(id);
 
-            if (id != customer.CustomerId)
-            {
-                return BadRequest("Yetkisiz üye, tekrar giriş yapın.");
-            }
-
-            if(c == null)
+            if (c == null)
             {
                 return BadRequest("Kullanıcı bulunamadı.");
             }
 
-            //Recieving JSON data, filling customerdetails table.
+            if (c.IsActive == false)
+            {
+                return BadRequest("Kullanıcı yasaklanmış");
+            }
+
             var customerDetail = new CustomerDetail();
             customerDetail.CustomerId = customer.CustomerId;
             customerDetail.Address = customer.CustomerDetails.FirstOrDefault().Address;
@@ -252,11 +252,11 @@ namespace OBJS.API.Controllers
             customerDetail.Phone = customer.CustomerDetails.FirstOrDefault().Phone;
 
             _context.CustomerDetails.Add(customerDetail);
-            
+
             //Save asyncronized changes on dbcontext
             await _context.SaveChangesAsync();
 
-            return (customerDetail);
+            return Ok("Kullanıcı oluşturuldu / güncellendi");
         }
 
         //Send customer to the method, it checks if user is in the system

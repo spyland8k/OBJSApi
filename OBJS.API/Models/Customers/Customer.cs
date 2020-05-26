@@ -30,14 +30,13 @@ namespace OBJS.API.Models.Customers
         //[DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [DisplayFormat(NullDisplayText = "Null name")]
         // Allow up to 40 uppercase and lowercase 
         // characters. Use standard error.
         [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$")]
         //ErrorMessage = "Characters are not allowed.")
         public string Name { get; set; }
 
-        [DisplayFormat(NullDisplayText = "Null surname")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$")]
         public string Surname { get; set; }
 
         public string Email { get; set; }

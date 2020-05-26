@@ -83,6 +83,10 @@ namespace OBJS.API.Controllers
                 .Where(a => a.CategoryId == id)
                 .Include(k => k.AdvertiseDetails).ToListAsync();
 
+            if(advertises == null)
+            {
+                return NotFound("Sistemde " + id + "'ye sahip kategoride ilan bulunmuyor");
+            }
 
             return advertises;
         }
@@ -128,13 +132,13 @@ namespace OBJS.API.Controllers
         }
 
         // POST: api/Advertises
-        // Requested Json has a include advertisedetails
+        // Requested Json also has a include advertisedetails
         [HttpPost]
         public async Task<ActionResult<Advertise>> PostAdvertise(Advertise advertise)
         {
             if (advertise == null)
             {
-                return BadRequest("İstek içeriği boş olamaz");
+                return BadRequest("Gönderilen İstek içeriği boş olamaz");
             }
 
             var customer = await _context.Customers.FindAsync(advertise.CustomerId);
@@ -157,14 +161,14 @@ namespace OBJS.API.Controllers
         {
             if (advertise == null)
             {
-                return BadRequest("İstek içeriği boş olamaz");
+                return BadRequest("Gönderilen İstek içeriği boş olamaz");
             }
 
             var adv = await _context.Advertises.FindAsync(id);
 
             if (adv == null)
             {
-                return NotFound("İlan bulunmamaktadır");
+                return NotFound(id + " numaralı ilan bulunmamaktadır");
             }
 
             if(adv.AdvertiseId != id)
@@ -191,7 +195,7 @@ namespace OBJS.API.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok("İlan oluşturuldu/güncellendi");
+            return Ok("İlan oluşturuldu / güncellendi");
         }
 
         // POST: api/Advertises/5/Feedbacks
