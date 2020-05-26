@@ -51,7 +51,7 @@ namespace OBJS.API.Models.Customers
         [Required]
         public bool IsSupplier { get; set; } = false;
 
-
+        //Navigation Properties, those are using for a nested queries and references
         public virtual ICollection<CustomerDetail> CustomerDetails { get; set; }
 
         public virtual ICollection<Advertise> Advertises { get; set; }

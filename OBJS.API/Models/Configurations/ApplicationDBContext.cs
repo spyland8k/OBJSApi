@@ -78,7 +78,7 @@ namespace OBJS.API.Models
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
-            //Entity seeding data initializer
+            //Entity seeding with data for initializer, when the system initialized those values added to be context
             modelBuilder.Entity<AdvertiseState>(entity =>
             {
                 entity.HasData(
@@ -90,8 +90,7 @@ namespace OBJS.API.Models
 
             modelBuilder.Entity<Category>(entity =>
             {
-                //Category test = new Category { CategoryId = 1, Name = "Temizlik", ParentID = null };
-                //Hasdata inserting data on given entity if there is no exist on DB
+                 //Hasdata inserting data on given entity if there is no exist on DB
                 entity.HasData(
                     new Category { CategoryId = 1, Name = "Temizlik", ParentID = null, },
                     new Category { CategoryId = 2, Name = "Tadilat", ParentID = null },
@@ -107,7 +106,6 @@ namespace OBJS.API.Models
                     new Category { CategoryId = 12, Name = "Su Tesisatçısı", ParentID = 10, }
                     );
             });
-
         }
     }
 }

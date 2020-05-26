@@ -101,6 +101,11 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde bu ilan bulunmamaktadır");
             }
 
+            if (advertise.IsActive == false)
+            {
+                return BadRequest("İlan aktif değildir");
+            }
+
             _context.Entry(advertise).State = EntityState.Modified;
 
             try
@@ -132,6 +137,13 @@ namespace OBJS.API.Controllers
                 return BadRequest("İstek içeriği boş olamaz");
             }
 
+            var customer = await _context.Customers.FindAsync(advertise.CustomerId);
+
+            if(customer.IsActive == false)
+            {
+                return BadRequest("Aktif olmayan kullanıcı ilan veremez");
+            }
+
             _context.Advertises.Add(advertise);
             await _context.SaveChangesAsync();
 
@@ -161,15 +173,19 @@ namespace OBJS.API.Controllers
                 return BadRequest("İlana erişim yetkisi bulunmuyor");
             }
 
+            var customer = await _context.Customers.FindAsync(advertise.CustomerId);
+
+            if (customer.IsActive == false)
+            {
+                return BadRequest("Aktif olmayan kullanıcı ilan veremez");
+            }
+
             var advertiseDetail = new AdvertiseDetail();
+
             advertiseDetail.AdvertiseId = advertise.AdvertiseId;
-
             advertiseDetail.Title = advertise.AdvertiseDetails.FirstOrDefault().Title;
-
             advertiseDetail.Description = advertise.AdvertiseDetails.FirstOrDefault().Description;
-
             advertiseDetail.ImagePath = advertise.AdvertiseDetails.FirstOrDefault().ImagePath;
-
 
             _context.AdvertiseDetails.Add(advertiseDetail);
 
@@ -205,10 +221,12 @@ namespace OBJS.API.Controllers
             //İlan başarıyla tamamlandıktan sonra işi veren ve işi yapan kişiler birbirlerine geri bildirim(yorum) gönderebilir.
             if (advertise.Advertisestate.IsStarted == true || advertise.Advertisestate.IsContinue == true)
             {
-                return NotFound("İlan, ilanı oluşturan kişi tarafından onaylanmadan yorum yapılamaz");
+                return NotFound("İlanı oluşturan kişi tarafından işlem tamamlanmadan yorum yapılamaz");
             }
 
             feedback.AdvertiseId = advertise.AdvertiseId;
+            //BidderID comes from who has bids to the advertise
+            //OwnerID comes from who has advertise published
             feedback.OwnerID = advertise.CustomerId;
 
             _context.Feedbacks.Add(feedback);

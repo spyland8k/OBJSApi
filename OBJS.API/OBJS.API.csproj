@@ -96,6 +96,8 @@
     <Compile Remove="Migrations\20200525184022_category-property.Designer.cs" />
     <Compile Remove="Migrations\20200525185024_category-property.cs" />
     <Compile Remove="Migrations\20200525185024_category-property.Designer.cs" />
+    <Compile Remove="Migrations\20200526142754_unneccessary_variables.cs" />
+    <Compile Remove="Migrations\20200526142754_unneccessary_variables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

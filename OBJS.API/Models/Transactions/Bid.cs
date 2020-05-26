@@ -20,20 +20,18 @@ namespace OBJS.API.Models.Transactions
         public int Duration { get; set; }
 
 
+        //Navigation Properties, those are using for a nested queries and references
+
         //FK; One Advertisement has a many Bid // Cascade delete
-        //[ForeignKey("Advertise")]
         public int AdvertiseId { get; set; }
 
         [JsonIgnore]
         public virtual Advertise Advertise { get; set; }
 
         //FK; One bid has a one Supplier // No-Cascade delete
-        //[ForeignKey("Customer")]
         public int CustomerId { get; set; }
 
         [JsonIgnore]
         public virtual Customer Customer { get; set; }
-
-        //public ICollection<Bid> Bids { get; set; }
     }
 }

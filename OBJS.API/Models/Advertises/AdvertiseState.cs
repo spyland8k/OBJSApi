@@ -15,7 +15,6 @@ namespace OBJS.API.Models.Advertises
         [Required]
         public bool IsFinished { get; set; } = false;
 
-
         public ICollection<Advertise> Advertises { get; set; }
     }
 }
