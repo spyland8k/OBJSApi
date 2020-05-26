@@ -31,12 +31,13 @@ namespace OBJS.API.Controllers
 
             if(username == null)
             {
-                customers = await _context.Customers.ToListAsync();
+                customers = await _context.Customers
+                    .Where(k => k.IsActive == true).ToListAsync();
             }
             else
             {
                 customers = await _context.Customers
-                .Where(k => k.Username == username).ToListAsync();
+                    .Where(k => k.Username == username && k.IsActive == true).ToListAsync();
             }
 
             await _context.Customers
@@ -65,6 +66,11 @@ namespace OBJS.API.Controllers
                 return NotFound(id + " numaraya sahip kullanıcı yoktur.");
             }
 
+            if(customer.IsActive == false)
+            {
+                return Ok(id + "li kullanıcıya erişilemez");
+            }
+
             await _context.Customers
                 .Include(k => k.CustomerDetails)
                 .Include(k => k.Advertises)
@@ -89,6 +95,11 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
             }
 
+            if (customer.IsActive == false)
+            {
+                return Ok(id + "li kullanıcıya erişilemez");
+            }
+
             var customerdetail = await _context.CustomerDetails
                 .Where(a => a.CustomerId == id).ToListAsync();
 
@@ -111,6 +122,11 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
             }
 
+            if (customer.IsActive == false)
+            {
+                return Ok(id + "li kullanıcıya erişilemez");
+            }
+
             await _context.Bids
                 .Where(a => a.CustomerId == id).ToListAsync();
 
@@ -128,7 +144,11 @@ namespace OBJS.API.Controllers
                 return NotFound("Sistemde " + id + "'ye sahip numaralı kullanıcı yoktur.");
             }
 
-            
+            if (customer.IsActive == false)
+            {
+                return Ok(id + "li kullanıcıya erişilemez");
+            }
+
             var customerFromFeedbacks = await _context.Feedbacks
                 .Where(a => a.OwnerID == id).ToListAsync();
 
