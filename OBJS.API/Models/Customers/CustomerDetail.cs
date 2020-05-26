@@ -16,7 +16,7 @@ namespace OBJS.API.Models.Customers
 
         public string City { get; set; }
 
-        public int Phone { get; set; }
+        public string Phone { get; set; }
 
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
